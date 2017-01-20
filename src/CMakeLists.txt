@@ -184,3 +184,7 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+# Build
+add_executable(SimuNode SimuNode.cpp)
+target_link_libraries(SimuNode ${catkin_LIBRARIES})

@@ -2,6 +2,10 @@
 #include "std_msgs/String.h"
 #include <sstream>
 
+void cmdBuoyCallback(const std_msgs::String::ConstPtr& msg)
+{
+    ROS_INFO("I heard: [%s]", msg->data.c_str());
+}
 
 /**
  * Node Simulation
@@ -14,7 +18,7 @@
  *  distanceEmissionMin : distanceEmissionMax : int
  *  - la position bruitée mesurée de la profondeur
  *
- *  Listen
+ *  Suscribe :
  *  - commande bouee
  *  taux de remplissage du ballast (la simulation connait la taille et la densité de la bouee avec le parameter server)
  * @param argc
@@ -40,9 +44,9 @@ int main(int argc, char **argv)
     // Declare variables that can be modified by launch file or command line.
     int a;
     int b;
-    string message;
+    std_msgs::String message;
     int rate;
-    string topic;
+    std_msgs::String topic;
 
     /* Initialize node parameters from launch file or command line.
        Use a private node handle so that multiple instances of the node can
@@ -54,7 +58,12 @@ int main(int argc, char **argv)
 //    private_node_handle_.param("topic", topic, string("example"));
 
     // Create a publisher and name the topic.
-    ros::Publisher pub_message = n.advertise<node_example::node_example_data>(topic.c_str(), 10);
+    ros::Publisher pubBuoySensor = n.advertise<std_msgs::String>("buoySensors", 10);
+    ros::Publisher pubBoatMsg = n.advertise<std_msgs::String>("boatMsgs", 10);
+
+    // Create suscribers
+    ros::Subscriber subCommandBuoy = n.subscribe("CommandBuoy", 1000, cmdBuoyCallback);
+
 
     // Tell ROS how fast to run this node.
     ros::Rate r(rate);
@@ -63,7 +72,8 @@ int main(int argc, char **argv)
     while (n.ok())
     {
         // Publish the message.
-        node_example->publishMessage(&pub_message);
+        pubBuoySensor.publish();
+        pubBoatMsg.publish();
 
         ros::spinOnce();
         r.sleep();
