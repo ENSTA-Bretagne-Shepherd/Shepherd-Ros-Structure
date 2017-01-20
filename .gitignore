@@ -3,4 +3,6 @@
 *.iml
 out
 gen
+build/
+devel/
 cmake-build-debug/h
