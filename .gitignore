@@ -1,2 +1,6 @@
-build/
-devel/
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+cmake-build-debug/h
