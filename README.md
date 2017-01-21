@@ -21,4 +21,9 @@ Pour contribuer:
 
 1. Créez une branche pour la fonctionnalité sur laquelle vous travaillez.
 2. Mettez-y (dans le package correspondant) tout votre travail.
-3. Nous ferons les merges ensemble
+3. __NE MERGEZ PAS SUR LA BRANCHE MASTER__. Nous ferons les merges ensemble, lorsque nous serons sur que ca marche
+
+
+__NB__:
+* convention pour le nom de la branche: `<nom_du_package>_<fonctionnalité>`  
+		_par exemple: si vous travaillez sur un noeud de localisation concernant les bouées nommez la branche:_  `loc_buoy`
