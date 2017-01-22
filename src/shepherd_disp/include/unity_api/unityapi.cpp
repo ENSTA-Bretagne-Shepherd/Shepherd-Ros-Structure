@@ -16,8 +16,8 @@
 
 DisplayAPI::DisplayAPI(const char* peerHost, int peerPort)
 {
-	// Create
-	sock = socket(AF_INET, SOCK_STREAM, 0);
+    // Create
+    sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         perror("Cannot create a socket"); exit(1);
     }
@@ -53,7 +53,7 @@ DisplayAPI::~DisplayAPI(){
 
 void DisplayAPI::sendParams(Params params){
     std::string msg = Value(params).toJSONString().append("\n");
-	
+    
     int n = write(sock, msg.c_str(), msg.size());
     if(n < 0)
         printf("Error while writing to socket.\n");
