@@ -70,6 +70,7 @@ add_message_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
+  roscpp
   std_msgs  # Or other packages containing msgs
   geometry_msgs
 )
@@ -117,9 +118,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
-include_directories(
-  ${catkin_INCLUDE_DIRS}
-)
+include_directories( include ${catkin_INCLUDE_DIRS})
 
 ## Declare a C++ library
 # add_library(shepherd_disp
@@ -132,16 +131,16 @@ include_directories(
 # add_dependencies(shepherd_disp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(shepherd_disp_node src/shepherd_disp_node.cpp)
+add_executable(unity_display_node src/unity_display_node.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(shepherd_disp_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(unity_display_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(shepherd_disp_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(unity_display_node
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
