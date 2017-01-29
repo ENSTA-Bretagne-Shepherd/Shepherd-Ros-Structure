@@ -2,6 +2,10 @@
 
 __Version ROS__: Indigo
 
+### Structure des noeuds
+
+L'architecture des noeuds de ce repository est disponible [ici](https://github.com/ENSTA-Bretagne-Shepherd/Shepherd-Ros-Structure/blob/master/structure.pdf)
+
 ### Utilisation
 
 ```bash
