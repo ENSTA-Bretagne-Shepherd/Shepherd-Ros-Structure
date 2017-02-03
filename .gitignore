@@ -6,3 +6,5 @@ gen
 build/
 devel/
 cmake-build-debug/h
+*.sublime-project
+*.sublime-workspace

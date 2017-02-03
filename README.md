@@ -17,6 +17,13 @@ Il y a 4 packages différents:
  - __shepherd_loc__  : ici se trouvent les noeuds de _localisation_ (méthodes par intervalles ...)
  - __shepherd_reg__  : ici se trouvent les noeuds de _régulation_ (suivi de triangles, flocking ...)
 
-* Créez une branche pour la fonctionnalité sur laquelle vous travaillez.
-* Mettez-y (dans le package correspondant) tout votre travail.
-* Nous ferons les merges ensemble
+Pour contribuer:
+
+1. Créez une branche pour la fonctionnalité sur laquelle vous travaillez.
+2. Mettez-y (dans le package correspondant) tout votre travail.
+3. __NE MERGEZ PAS SUR LA BRANCHE MASTER__. Nous ferons les merges ensemble, lorsque nous serons sur que ca marche
+
+
+__NB__:
+* convention pour le nom de la branche: `<nom_du_package>_<fonctionnalité>`  
+		_par exemple: si vous travaillez sur un noeud de localisation concernant les bouées nommez la branche:_  `loc_buoy`
