@@ -5,6 +5,7 @@
 #include <iostream>
 #include "shepherd_disp/SailboatPose.h"
 #include "shepherd_reg/SailboatCmd.h"
+#include <math.h>
 
 class TriangleController
 {
@@ -16,6 +17,7 @@ public:
 
     cmd_pub = node.advertise<shepherd_reg::SailboatCmd>("sailboat/cmd", 1);
 
+    iseg = 0; q = 1;
   }
 
   void updatePose(const shepherd_disp::SailboatPose::ConstPtr& msg){
@@ -37,8 +39,30 @@ public:
   }
 
   void updateCommand(){
-    cmd.rudder_angle = 10;
-    cmd.sail_angle = 60;
+    double r=10;
+    double zeta=M_PI/4;
+    double ax,bx,ay,by;
+    ax = cx + 50 * cos(iseg * 2 * M_PI/3);
+    ay = cy + 50 * sin(iseg * 2 * M_PI/3);
+    bx = cx + 50 * cos((iseg + 1) * 2 * M_PI/3);
+    by = cy + 50 * sin((iseg + 1) * 2 * M_PI/3);
+    if((x-bx)*(ax-bx) + (y-by)*(ay-by) < 0)iseg++;
+    
+    double e = ((bx-ax)*(y-ay)-(x-ax)*(by-ay))/hypot(ax-bx,ay-by);
+    if (fabs(e)>r) q=0;  //The robot is now free from its closed-hauled mode
+    double phi=atan2(by-ay,bx-ax);
+    double thetabar=phi-0.5*atan(e/r);
+    if ((q==0)&((cos(wind-thetabar)+cos(zeta)<0)|((fabs(e)<r)&(cos(wind-phi)+cos(zeta)<0)))) q=static_cast<int>(sign(e));
+    if (q!=0)  thetabar=M_PI+wind-zeta*q;
+    double dtheta=theta-thetabar;
+
+    // command
+    double deltag, deltavmax;
+    deltag=(1/M_PI)*(atan(tan(0.5*dtheta)));
+    deltavmax=0.5*M_PI*(0.5*(cos(wind-thetabar)+1));
+    // Update the command message
+    cmd.rudder_angle = deltag;
+    cmd.sail_angle = deltavmax;
   }
 
   void spin(){
@@ -72,7 +96,15 @@ private:
   float wind;
   float cx, cy;
 
+  // variables obscure de Dyson
+  int iseg, q;
+
   shepherd_reg::SailboatCmd cmd;
+
+  // helper methods
+  double sign(double a){
+    if (a > 0) return 1; else return -1;
+  }
 
   
 };
