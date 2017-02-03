@@ -1,5 +1,7 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
+#include "std_msgs/Float64.h"
+#include "std_msgs/Float64MultiArray.h"
 #include <iostream>
 #include "shepherd_disp/SailboatPose.h"
 #include "shepherd_reg/SailboatCmd.h"
@@ -12,10 +14,9 @@ public:
     wind_sub = node.subscribe("env/wind", 1, &TriangleController::updateWind, this);
     center_sub = node.subscribe("sailboat/triangleCenter", 1, &TriangleController::updateCenter, this);
 
-    cmd_pub = node.advertise<shepherd_reg::SailboatCmd>
+    cmd_pub = node.advertise<shepherd_reg::SailboatCmd>("sailboat/cmd", 1);
 
   }
-  ~TriangleController();
 
   void updatePose(const shepherd_disp::SailboatPose::ConstPtr& msg){
     x = (msg->pose).x;
@@ -25,13 +26,13 @@ public:
   }
 
   void updateWind(const std_msgs::Float64::ConstPtr& msg){
-    wind = msg.data;
+    wind = msg->data;
     ROS_INFO("I received a wind: [%f]", wind);
   }
 
   void updateCenter(const std_msgs::Float64MultiArray::ConstPtr& msg){
-    cx = msg.data[0];
-    cy = msg.data[1];
+    cx = msg->data[0];
+    cy = msg->data[1];
     ROS_INFO("I received a center: ([%f], [%f])", cx, cy);
   }
 
