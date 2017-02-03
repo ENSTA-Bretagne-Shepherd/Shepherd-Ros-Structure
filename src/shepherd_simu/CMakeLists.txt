@@ -125,7 +125,7 @@ include_directories( include ${catkin_INCLUDE_DIRS})
 # add_dependencies(shepherd_simu ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-add_executable(SimuNode src/SimuNode.cpp)
+add_executable(SimuNode src/sim_voilier.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above

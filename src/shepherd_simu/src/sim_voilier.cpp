@@ -8,7 +8,7 @@ void cmdBuoyCallback(const std_msgs::String::ConstPtr& msg)
 }
 
 /**
- * Node Simulation
+ * Node sim_voilier
  * On considère que le destinataire de cette simulation est une bouee individuelle ou un ensemble de bouees
  *
  * Publish :
@@ -16,7 +16,7 @@ void cmdBuoyCallback(const std_msgs::String::ConstPtr& msg)
  *  message : string
  *  id : xMax : xMin : yMax : yMin : zMax : zMin : int
  *  distanceEmissionMin : distanceEmissionMax : int
- *  - la position bruitée mesurée de la profondeur
+ *  TOPIC : pose_real
  *
  *  Suscribe :
  *  - commande bouee
@@ -72,6 +72,7 @@ int main(int argc, char **argv)
     while (n.ok())
     {
         // Publish the message.
+
         pubBuoySensor.publish();
         pubBoatMsg.publish();
 
