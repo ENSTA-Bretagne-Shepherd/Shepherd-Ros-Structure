@@ -36,8 +36,33 @@ public:
     ROS_INFO("I received a center: ([%f], [%f])", cx, cy);
   }
 
+  void updateCommand(){
+    cmd.rudder_angle = 10;
+    cmd.sail_angle = 60;
+  }
+
+  void spin(){
+
+    ros::Rate loop(10);
+
+    while (ros::ok()){
+
+      // call all waiting callbacks
+      ros::spinOnce();
+      
+      updateCommand();
+      // publish the command
+      cmd_pub.publish(cmd);
+
+      loop.sleep();
+
+    }
+  }
+
 private:
+  // Node
   ros::NodeHandle node;
+  // 
   ros::Subscriber pose_sub;
   ros::Subscriber wind_sub;
   ros::Subscriber center_sub; // triangleCenter
@@ -46,6 +71,8 @@ private:
   float x, y, theta;
   float wind;
   float cx, cy;
+
+  shepherd_reg::SailboatCmd cmd;
 
   
 };
@@ -59,11 +86,7 @@ int main(int argc, char **argv)
 
   TriangleController controller;
 
-  // Publish Frequency
-  ros::Rate loop_rate(10);
-
-  // spin
-  ros::spin();
+  controller.spin();
 
   return 0;
 }
