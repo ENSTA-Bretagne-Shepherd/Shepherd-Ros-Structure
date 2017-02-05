@@ -41,6 +41,7 @@
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend> shepherd_disp </build_depend>
+  <build_depend> shepherd_reg </build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>rospy</build_depend>
   <run_depend>roscpp</run_depend>

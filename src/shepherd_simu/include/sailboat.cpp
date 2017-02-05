@@ -1,10 +1,10 @@
-#include "sailboat.h"
+#include <sailboat.h>
 #include <stdio.h>
 
-extern double dt;
-
-Sailboat::Sailboat(double x,double y)
-{   this->x=x;
+Sailboat::Sailboat(double x,double y,double dt)
+{
+    this->dt = dt;
+    this->x=x;
     this->y=y;
     theta =-3.0; v = 1; omega = 0.0;  phi = 0.5; phiPoint = 0;
     Jx = 3000.0; Jz = 10000.0; // moments d'inertie
@@ -32,6 +32,7 @@ void Sailboat::setTargetTriangle(double cx, double cy)
 double sign(double a)
 {if (a>0) return 1; else return -1;};
 
+/*
 void Sailboat::controller()   //voir www.ensta-bretagne.fr/jaulin/polyrobots.pdf
 {   double r=10;
     double zeta=M_PI/4;
@@ -41,7 +42,7 @@ void Sailboat::controller()   //voir www.ensta-bretagne.fr/jaulin/polyrobots.pdf
     bx=cx+50*cos((iseg+1)*2*M_PI/3);
     by=cy+50*sin((iseg+1)*2*M_PI/3);
     if((x-bx)*(ax-bx) + (y-by)*(ay-by) < 0)iseg++;
-    
+
     double e=((bx-ax)*(y-ay)-(x-ax)*(by-ay))/hypot(ax-bx,ay-by);
     if (fabs(e)>r) q=0;  //The robot is now free from its closed-hauled mode
     double phi=atan2(by-ay,bx-ax);
@@ -53,10 +54,11 @@ void Sailboat::controller()   //voir www.ensta-bretagne.fr/jaulin/polyrobots.pdf
     deltavmax=0.5*M_PI*(0.5*(cos(psi-thetabar)+1));
     //qDebug()<<"q="<<q<<",   e="<<e;
 }
+*/
 
-void Sailboat::clock()  // The model is described in "L. Jaulin Modelisation et commande d'un bateau a voile, CIFA2004, Douz (Tunisie)"
+void Sailboat::clock(double deltag,double deltavmax)  // The model is described in "L. Jaulin Modelisation et commande d'un bateau a voile, CIFA2004, Douz (Tunisie)"
 {
-    controller();
+//    controller();
     double xw_ap=a*cos(psi-theta)-v;
     double yw_ap=a*sin(psi-theta);
     double psi_ap=atan2(yw_ap,xw_ap);   //Apparent wind

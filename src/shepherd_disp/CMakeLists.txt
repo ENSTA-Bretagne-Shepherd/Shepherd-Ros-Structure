@@ -51,7 +51,7 @@ add_message_files(
   SailboatPose.msg
 #   Message1.msg
 #   Message2.msg
-# )
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -138,9 +138,7 @@ add_executable(unity_display_node src/unity_display_node.cpp)
 add_dependencies(unity_display_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(unity_display_node
-  ${catkin_LIBRARIES}
-)
+target_link_libraries(unity_display_node ${catkin_LIBRARIES})
 
 #############
 ## Install ##

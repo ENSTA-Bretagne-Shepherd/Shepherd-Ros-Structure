@@ -1,11 +1,11 @@
-#include "../../ROS_ws_SHEPHERD/src/shepherd_simu/src/sailboat.h"
+#include <sailboat.h>
 #include "buoy.h"
 #include <stdio.h>
 
-extern double dt;
-
-Buoy::Buoy(int nb, double xb, double yb, double zb, double ub)
+Buoy::Buoy(int nb, double xb, double yb, double zb, double ub, double dt)
 {
+    this->dt = dt;
+
     // id
     n = nb;
 

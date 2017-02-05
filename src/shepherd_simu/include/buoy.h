@@ -11,6 +11,8 @@
 class Buoy
 {
     public:
+        double dt;
+
         double x;//!State variables
         double y;//!State variables
         double z;//!State variables
@@ -62,9 +64,9 @@ class Buoy
          * @param zb : profondeur z en m
          * @param ub : commande
          */
-        Buoy(int nb, double xb, double yb, double zb, double ub);
+        Buoy(int nb, double xb, double yb, double zb, double ub, double dt);
 
-    inline Buoy (){x=0;y=0;z=-10;Xdot[0]=0;Xdot[1]=0;Xdot[2]=0;}
+    inline Buoy (){x=0;y=0;z=-10;Xdot[0]=0;Xdot[1]=0;Xdot[2]=0;dt=1;}
         //~Buoy();
  };
 

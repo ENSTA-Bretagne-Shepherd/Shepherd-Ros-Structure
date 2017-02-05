@@ -17,9 +17,10 @@ public:
     shepherd_disp::SailboatPose sailboatPose;
     ros::Publisher pubSailboatPose;
     // suscribe
+    shepherd_reg::SailboatCmd sailboatCmd;
     ros::Subscriber subCmd;
 
-    RosNode(std::string name,double rate, int argc, char **argv);
+    RosNode(double rate);
     void loop();
 
     static void cmdCallback(const std_msgs::String::ConstPtr& msg);

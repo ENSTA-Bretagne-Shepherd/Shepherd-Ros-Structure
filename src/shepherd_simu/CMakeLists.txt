@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   message_generation
   shepherd_disp
+  shepherd_reg
 )
 
 ## System dependencies are found with CMake's conventions
@@ -132,7 +133,10 @@ include_directories( include ${catkin_INCLUDE_DIRS})
 # add_dependencies(shepherd_simu ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-add_executable(shepherd_simu src/Node-sim_voilier.cpp)
+set(CUSTOM_INCLUDE_SRC
+        include/sailboat.cpp
+        include/buoy.cpp)
+add_executable(shepherd_simu src/Node-sim_voilier.cpp ${CUSTOM_INCLUDE_SRC})
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above

@@ -1,17 +1,16 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "shepherd_disp/SailboatPose.h"
+#include "shepherd_reg/SailboatCmd.h"
 #include "Node-sim_voilier.h"
 
 #include "config.h"
-#include "world.h"
+#include "sailboat.h"
 
 // ______________________________________________________________
 // ======================== NODE INIT ===========================
 
-RosNode::RosNode(std::string name,double rate, int argc, char **argv):r(rate){
-    // Set up ROS.
-    ros::init(argc, argv, name);
+RosNode::RosNode(double rate):r(rate){
 
     // Create a new NodeExample object.
 //    NodeExample *node_example = new NodeExample();
@@ -37,7 +36,6 @@ RosNode::RosNode(std::string name,double rate, int argc, char **argv):r(rate){
     pubSailboatPose = advertise<shepherd_disp::SailboatPose>("pose_real", 10);
 
     // Create suscribers
-
     subCmd = subscribe("cmd", 1000, cmdCallback);
 }
 
@@ -52,7 +50,10 @@ void RosNode::loop(){
 
 void RosNode::cmdCallback(const std_msgs::String::ConstPtr& msg)
 {
+
+
     ROS_INFO("I heard: [%s]", msg->data.c_str());
+
 
 }
 
@@ -70,25 +71,34 @@ void RosNode::cmdCallback(const std_msgs::String::ConstPtr& msg)
  */
 int main(int argc, char **argv)
 {
-    RosNode n = RosNode("sim_voilier", 10, argc,argv);
+    // Set up ROS.
+    ros::init(argc, argv, "sim_voilier");
+    RosNode n = RosNode(10);
 
     // Objects creation
-    World env = World(BOAT_NUMBER,BUOY_NUMBER);
-    env.initialize();
+    double dt = n.r.expectedCycleTime().sec+n.r.expectedCycleTime().nsec/1000000000.0;
+    printf("dt = %f\n",dt);
+    Sailboat boat  = Sailboat(0,0,dt);
+
+    // Server parameter to include here
+    boat.setTargetTriangle(100,100);
 
     // Main loop.
     while (n.ok())
     {
+        // C'est la node pour la simulation physique d'un seul bateau. DOnc il faut shunter la classe World
+        // Du coup on perd le temps de simulation mais je pense que c'est pas trop grave
 
-        env.clock();
+
+        boat.clock(n.sailboatCmd.rudder_angle,n.sailboatCmd.sail_angle);
 
         //Temps interne
-        int dt = 10; //sec
-        env.simuTime += dt;
+        //int dt = 10; //sec
+        //boat.simuTime += dt;
 
-        n.sailboatPose.pose.theta = env.vec_sailboat[0].theta;
-        n.sailboatPose.pose.x = env.vec_sailboat[0].x;
-        n.sailboatPose.pose.y = env.vec_sailboat[0].y;
+        n.sailboatPose.pose.theta = boat.theta;
+        n.sailboatPose.pose.x = boat.x;
+        n.sailboatPose.pose.y = boat.y;
 
         // Publish the message.
         n.pubSailboatPose.publish(n.sailboatPose);
