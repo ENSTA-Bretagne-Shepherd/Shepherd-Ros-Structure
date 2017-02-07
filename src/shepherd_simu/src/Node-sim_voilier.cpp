@@ -36,7 +36,7 @@ RosNode::RosNode(double rate):r(rate){
     pubSailboatPose = advertise<shepherd_disp::SailboatPose>("pose_real", 10);
 
     // Create suscribers
-    subCmd = subscribe("cmd", 1000, cmdCallback);
+    subCmd = subscribe("sailboat/cmd", 1000, &cmdCallback);
 }
 
 void RosNode::loop(){
@@ -48,12 +48,12 @@ void RosNode::loop(){
 // ______________________________________________________________
 // ======================== NODE PROCESS ========================
 
-void RosNode::cmdCallback(const std_msgs::String::ConstPtr& msg)
+void RosNode::cmdCallback(const shepherd_reg::SailboatCmd::ConstPtr& msg)
 {
 
 
-    ROS_INFO("I heard: [%s]", msg->data.c_str());
-
+    ROS_INFO("I heard: [%f] [%f]", msg->rudder_angle, msg->sail_angle);
+    // TODO : update command for the simulation
 
 }
 
@@ -62,7 +62,7 @@ void RosNode::cmdCallback(const std_msgs::String::ConstPtr& msg)
  *
  * Publish :
  *  TOPIC : sailboatX/pose_real
- * Suscribe :
+ * Subscribe :
  *  TOPIC : sailboatX/cmd
  *
  * @param argc

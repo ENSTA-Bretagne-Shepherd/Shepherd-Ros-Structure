@@ -23,5 +23,5 @@ public:
     RosNode(double rate);
     void loop();
 
-    static void cmdCallback(const std_msgs::String::ConstPtr& msg);
+    static void cmdCallback(const shepherd_reg::SailboatCmd::ConstPtr& msg);
 };
