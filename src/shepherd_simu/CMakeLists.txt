@@ -7,6 +7,11 @@ project(shepherd_simu)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
+  geometry_msgs
+  std_msgs
+  message_generation
+  shepherd_disp
+  shepherd_reg
 )
 
 ## System dependencies are found with CMake's conventions
@@ -43,11 +48,12 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+        FILES
+        #SailboatPose.msg
+        #   Message1.msg
+        #   Message2.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -64,10 +70,12 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
+#generate_messages(
+#        DEPENDENCIES
+#        roscpp
+#        std_msgs  # Or other packages containing msgs
+#        geometry_msgs
+#)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -112,9 +120,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
-include_directories(
-  ${catkin_INCLUDE_DIRS}
-)
+include_directories( include ${catkin_INCLUDE_DIRS})
 
 ## Declare a C++ library
 # add_library(shepherd_simu
@@ -127,16 +133,19 @@ include_directories(
 # add_dependencies(shepherd_simu ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(shepherd_simu_node src/shepherd_simu_node.cpp)
+set(CUSTOM_INCLUDE_SRC
+        include/sailboat.cpp
+        include/buoy.cpp)
+add_executable(shepherd_simu src/Node-sim_voilier.cpp ${CUSTOM_INCLUDE_SRC})
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(shepherd_simu_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(shepherd_simu ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(shepherd_simu_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(shepherd_simu
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
