@@ -6,4 +6,3 @@ gen
 build/
 devel/
 cmake-build-debug/h
-src/CMakeLists.txt
