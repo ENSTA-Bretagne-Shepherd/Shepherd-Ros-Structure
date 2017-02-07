@@ -7,18 +7,13 @@
 
 class Params; // Forward declaration of Params
 
-class DisplayAPI
-{
-public:
-	DisplayAPI(const char* address, int port);
-	~DisplayAPI();
-    void sendParams(Params params);
-    void sendSailBoatState(std::string auvname, double x, double y, double theta);
-    void sendBuoyState(std::string auvname, double x, double y, double z);
-    void displaySegment(double x1, double y1, double x2, double y2);
-private:
-	int sock;
-};
+void init_unity_connection(const char* peerHost, int peerPort);
+void close_unity_connection();
+void sendParams(Params params);
+void sendSailBoatState(std::string auvname, double x, double y, double theta, double thetav);
+void sendBuoyState(std::string auvname, double x, double y, double z);
+void displaySegment(double x1, double y1, double x2, double y2);
+
 
 /*!
  * A class to hold any type supported by vibes properties system, an to provide JSON serialization
@@ -46,7 +41,7 @@ public:
 class Params
 {
 public:
-	Params() {}
+    Params() {}
     template<typename T> Params(const std::string & name, const T &p) {_values[name] = p;}
     Value & operator[](const std::string &key) {return _values[key];}
     Value pop(const std::string &key, const Value &value_not_found = Value());
@@ -54,7 +49,7 @@ public:
     std::size_t size() const { return _values.size(); }
     std::string toJSON() const;
 private:
-	typedef std::map<std::string, Value> KeyValueMap;
+    typedef std::map<std::string, Value> KeyValueMap;
     KeyValueMap _values;
 };
 

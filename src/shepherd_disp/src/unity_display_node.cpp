@@ -5,7 +5,7 @@
 #include "shepherd_disp/SailboatPose.h"
 
 // the connection to unity api must be in a global scope
-DisplayAPI* displayptr;
+// DisplayAPI* displayptr;
 /**
  * This tutorial demonstrates simple receipt of messages over the ROS system.
  */
@@ -14,7 +14,7 @@ void chatterCallback(const shepherd_disp::SailboatPose::ConstPtr& msg)
   ROS_INFO("I received a position: ([%f], [%f], [%f])", (msg->pose).x, (msg->pose).y, (msg->pose).theta);
 
   // send sailboat position to unity
-  (*displayptr).sendSailBoatState("auv1", (msg->pose).x, (msg->pose).y, (msg->pose).theta);
+  sendSailBoatState("auv1", (msg->pose).x, (msg->pose).y, (msg->pose).theta, msg->sail_angle);
 }
 
 int main(int argc, char **argv)
@@ -30,8 +30,9 @@ int main(int argc, char **argv)
 
   // Connection to unity
   std::cout << "Trying to connect to " << argv[1] << std::endl;
-  displayptr = new DisplayAPI(argv[1], 13000);
-  (*displayptr).sendSailBoatState("auv1", 0, 0, 0.0);
+  init_unity_connection(argv[1], 13000);
+  // displayptr = new DisplayAPI(argv[1], 13000);
+  sendSailBoatState("auv1", 0, 0, 0.0, 0.0);
 
   // spin
   ros::spin();
