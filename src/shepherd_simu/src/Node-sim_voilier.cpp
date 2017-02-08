@@ -13,7 +13,7 @@
 RosNode::RosNode(double rate):r(rate){
 
     // Create a publisher and name the topic.
-    pubSailboatPose = advertise<shepherd_disp::SailboatPose>("pose_real", 10);
+    pubSailboatPose = advertise<shepherd_disp::SailboatPose>("sailboat/pose_real", 10);
 
     // Create suscribers
     subCmd = subscribe("sailboat/cmd", 1000, &cmdCallback);

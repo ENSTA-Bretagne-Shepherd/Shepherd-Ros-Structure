@@ -26,7 +26,7 @@ int main(int argc, char **argv)
   ros::NodeHandle n;
 
   // Subscriber to sailboat pose
-  ros::Subscriber sub = n.subscribe("sailboat/all", 1000, chatterCallback);
+  ros::Subscriber sub = n.subscribe("sailboat/pose_real", 1000, chatterCallback);
 
   // Connection to unity
   std::cout << "Trying to connect to " << argv[1] << std::endl;

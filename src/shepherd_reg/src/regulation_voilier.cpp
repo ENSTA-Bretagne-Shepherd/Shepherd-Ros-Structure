@@ -11,7 +11,7 @@ class TriangleController
 {
 public:
   TriangleController(){
-    pose_sub = node.subscribe("sailboat/all", 1, &TriangleController::updatePose, this);
+    pose_sub = node.subscribe("sailboat/pose_est", 1, &TriangleController::updatePose, this);
     wind_sub = node.subscribe("env/wind", 1, &TriangleController::updateWind, this);
     center_sub = node.subscribe("sailboat/triangleCenter", 1, &TriangleController::updateCenter, this);
 
