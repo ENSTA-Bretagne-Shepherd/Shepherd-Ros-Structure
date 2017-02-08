@@ -12,7 +12,7 @@ $ source devel/setup.bash
 $ roslaunch shepherd_simu demo1.launch
 ```
 
-Pour visionner les noeuds et changer les constantes d'environnement (vent, centre des triangle).
+Pour visionner les noeuds et changer les constantes d'environnement (vent, centres des triangles).
 Dans un __nouveau terminal__:
 
 ```bash
