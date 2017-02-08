@@ -12,26 +12,6 @@
 
 RosNode::RosNode(double rate):r(rate){
 
-    // Create a new NodeExample object.
-//    NodeExample *node_example = new NodeExample();
-
-    // Set up a dynamic reconfigure server.
-    // This should be done before reading parameter server values.
-//    dynamic_reconfigure::Server<node_example::node_example_paramsConfig> dr_srv;
-//    dynamic_reconfigure::Server<node_example::node_example_paramsConfig>::CallbackType cb;
-//    cb = boost::bind(&NodeExample::configCallback, node_example, _1, _2);
-//    dr_srv.setCallback(cb);
-
-    /* Initialize node parameters from launch file or command line.
-   Use a private node handle so that multiple instances of the node can
-   be run simultaneously while using different parameters.
-   Parameters defined in the .cfg file do not need to be initialized here
-   as the dynamic_reconfigure::Server does this for you.*/
-//    ros::NodeHandle private_node_handle_("~");
-//    private_node_handle_.param("rate", rate, int(40));
-//    private_node_handle_.param("topic", topic, string("example"));
-
-
     // Create a publisher and name the topic.
     pubSailboatPose = advertise<shepherd_disp::SailboatPose>("pose_real", 10);
 
