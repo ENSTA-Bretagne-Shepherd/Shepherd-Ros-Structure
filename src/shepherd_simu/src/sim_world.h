@@ -1,0 +1,52 @@
+//
+// Created by tag on 09/02/17.
+//
+
+#pragma once
+
+// Global variables
+
+// Node init
+ros::Rate r(10);
+
+// Publishers and subscribers
+/**
+ * PUBLISHER
+ * Etat de l'environnement
+ */
+ros::Publisher pubWorldEnv;
+shepherd_simu::WorldInfo worldInfo;
+
+
+/**
+ * Initialise la node
+ *
+ * Publish :
+ *  TOPIC : world/env
+ *
+ * @param argc
+ * @param argv
+ * @param name
+ * @return
+ */
+ros::NodeHandle initNode(int argc, char **argv, std::string name);
+
+/**
+ * Synchronise la node avec le temps de ROS
+ * Fonction incluse dans le header car elle n'a pas besoin d'être modifiée.
+ * @param n
+ */
+void loop(ros::NodeHandle n){
+    // ROS node management methods
+    ros::spinOnce();
+    r.sleep();
+}
+
+/**
+ * Node sim_world
+ * Main
+ * @param argc
+ * @param argv
+ * @return
+ */
+int main(int argc, char **argv);

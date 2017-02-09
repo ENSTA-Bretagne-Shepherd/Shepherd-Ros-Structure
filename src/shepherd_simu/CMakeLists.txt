@@ -21,11 +21,11 @@ find_package(catkin REQUIRED COMPONENTS
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-catkin_python_setup()
-catkin_install_python(
-  PROGRAMS src/sailboat_sim.py
-  DESTINATION models_bin
-  )
+#catkin_python_setup()
+#catkin_install_python(
+#  PROGRAMS src/sailboat_sim.py
+#  DESTINATION models_bin
+#  )
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -54,7 +54,7 @@ catkin_install_python(
 ## Generate messages in the 'msg' folder
 add_message_files(
         FILES
-        #SailboatPose.msg
+        WorldInfo.msg
         #   Message1.msg
         #   Message2.msg
 )
@@ -74,12 +74,12 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-#generate_messages(
-#        DEPENDENCIES
-#        roscpp
-#        std_msgs  # Or other packages containing msgs
-#        geometry_msgs
-#)
+generate_messages(
+        DEPENDENCIES
+        roscpp
+        std_msgs  # Or other packages containing msgs
+        geometry_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -114,6 +114,7 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES shepherd_simu
 #  CATKIN_DEPENDS roscpp rospy
+  CATKIN_DEPENDS message_runtime
 #  DEPENDS system_lib
 )
 
@@ -140,7 +141,7 @@ include_directories( include ${catkin_INCLUDE_DIRS})
 set(CUSTOM_INCLUDE_SRC
         include/sailboat.cpp
         include/buoy.cpp)
-add_executable(shepherd_simu src/Node-sim_voilier.cpp ${CUSTOM_INCLUDE_SRC})
+add_executable(shepherd_simu src/sim_voilier.cpp ${CUSTOM_INCLUDE_SRC} src/sim_world.cpp src/sim_world.h)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
