@@ -5,8 +5,6 @@
 #pragma once
 
 // Global variables
-
-// Node init
 ros::Rate r(10);
 
 // Publishers and subscribers
@@ -30,17 +28,6 @@ shepherd_simu::WorldInfo worldInfo;
  * @return
  */
 ros::NodeHandle initNode(int argc, char **argv, std::string name);
-
-/**
- * Synchronise la node avec le temps de ROS
- * Fonction incluse dans le header car elle n'a pas besoin d'être modifiée.
- * @param n
- */
-void loop(ros::NodeHandle n){
-    // ROS node management methods
-    ros::spinOnce();
-    r.sleep();
-}
 
 /**
  * Node sim_world

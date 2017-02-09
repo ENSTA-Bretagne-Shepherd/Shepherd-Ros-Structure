@@ -141,16 +141,17 @@ include_directories( include ${catkin_INCLUDE_DIRS})
 set(CUSTOM_INCLUDE_SRC
         include/sailboat.cpp
         include/buoy.cpp)
-add_executable(shepherd_simu src/sim_voilier.cpp ${CUSTOM_INCLUDE_SRC} src/sim_world.cpp src/sim_world.h)
+add_executable(sim_voilier src/sim_voilier.cpp ${CUSTOM_INCLUDE_SRC})
+add_executable(sim_world src/sim_world.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(shepherd_simu ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(sim_voilier ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(sim_world ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(shepherd_simu
-  ${catkin_LIBRARIES}
-)
+target_link_libraries(sim_voilier ${catkin_LIBRARIES})
+target_link_libraries(sim_world ${catkin_LIBRARIES})
 
 #############
 ## Install ##

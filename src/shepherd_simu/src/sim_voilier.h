@@ -5,8 +5,6 @@
 #pragma once
 
 // Global variables
-
-// Node init
 ros::Rate r(10);
 
 // Publishers and subscribers
@@ -23,6 +21,7 @@ shepherd_disp::SailboatPose sailboatPose;
  */
 ros::Subscriber subCmd;
 shepherd_reg::SailboatCmd sailboatCmd;
+void cmdCallback(const shepherd_reg::SailboatCmd::ConstPtr& msg);
 
 /**
  * SUBSCRIBER
@@ -30,6 +29,7 @@ shepherd_reg::SailboatCmd sailboatCmd;
  */
 ros::Subscriber subEnv;
 shepherd_simu::WorldInfo worldEnv;
+void envCallback(const shepherd_simu::WorldInfo::ConstPtr& msg);
 
 /**
  * Initialise la node
@@ -46,17 +46,6 @@ shepherd_simu::WorldInfo worldEnv;
  * @return
  */
 ros::NodeHandle initNode(int argc, char **argv, std::string name);
-
-/**
- * Synchronise la node avec le temps de ROS
- * Fonction incluse dans le header car elle n'a pas besoin d'être modifiée.
- * @param n
- */
-void loop(ros::NodeHandle n){
-    // ROS node management methods
-    ros::spinOnce();
-    r.sleep();
-}
 
 /**
  * Node sim_voilier

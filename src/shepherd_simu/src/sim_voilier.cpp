@@ -8,6 +8,20 @@
 
 // ======================== NODE INIT ===========================
 
+/**
+ * Initialise la node
+ *
+ * Publish :
+ *  TOPIC : sailboatX/pose_real
+ * Subscribe :
+ *  TOPIC : sailboatX/cmd
+ *  TOPIC : world/env
+ *
+ * @param argc
+ * @param argv
+ * @param name
+ * @return
+ */
 ros::NodeHandle initNode(int argc, char **argv, std::string name){
     // Set up ROS.
     ros::init(argc, argv, name);
@@ -65,7 +79,9 @@ int main(int argc, char **argv)
         // Publish the message.
         pubSailboatPose.publish(sailboatPose);
 
-        loop(n);
+        // Loop
+        ros::spinOnce();
+        r.sleep();
     }
 
     return 0;

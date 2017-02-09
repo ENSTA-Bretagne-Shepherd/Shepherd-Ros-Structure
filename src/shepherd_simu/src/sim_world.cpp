@@ -26,6 +26,7 @@ ros::NodeHandle initNode(int argc, char **argv, std::string name){
 int main(int argc, char **argv)
 {
     ros::NodeHandle n = initNode(argc, argv, "sim_world");
+    ros::Rate r = ros::Rate(10);
 
     // Server parameter to include here
     worldInfo.wind_strength = 1; // N ??
@@ -37,7 +38,9 @@ int main(int argc, char **argv)
         // Publish the message.
         pubWorldEnv.publish(worldInfo);
 
-        loop(n);
+        // Loop
+        ros::spinOnce();
+        r.sleep();
     }
 
     return 0;
