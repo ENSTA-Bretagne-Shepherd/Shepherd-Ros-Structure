@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   message_generation
+  shepherd_disp
 )
 
 ## System dependencies are found with CMake's conventions
@@ -49,6 +50,7 @@ add_message_files(
   FILES
   RosInterval.msg
   RosIntervalVector.msg
+  SailboatPoseInterval.msg
 )
 
 ## Generate services in the 'srv' folder
