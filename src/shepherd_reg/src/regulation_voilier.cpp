@@ -6,13 +6,14 @@
 #include "shepherd_disp/SailboatPose.h"
 #include "shepherd_reg/SailboatCmd.h"
 #include <math.h>
+#include <shepherd_simu/WorldInfo.h>
 
 class TriangleController
 {
 public:
   TriangleController(){
     pose_sub = node.subscribe("sailboat/pose_est", 1, &TriangleController::updatePose, this);
-    wind_sub = node.subscribe("env/wind_direction", 1, &TriangleController::updateWind, this);
+    wind_sub = node.subscribe("world/env", 1, &TriangleController::updateWind, this);
     center_sub = node.subscribe("sailboat/triangleCenter", 1, &TriangleController::updateCenter, this);
 
     cmd_pub = node.advertise<shepherd_reg::SailboatCmd>("sailboat/cmd", 1);
@@ -27,8 +28,8 @@ public:
     ROS_INFO("I received a position: ([%f], [%f], [%f])", x, y, theta);
   }
 
-  void updateWind(const std_msgs::Float64::ConstPtr& msg){
-    wind = msg->data;
+  void updateWind(const shepherd_simu::WorldInfo::ConstPtr& msg){
+    wind = msg->wind_angle;
     ROS_INFO("I received a wind: [%f]", wind);
   }
 

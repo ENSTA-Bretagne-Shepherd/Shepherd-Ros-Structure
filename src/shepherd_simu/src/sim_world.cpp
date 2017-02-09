@@ -16,7 +16,7 @@ ros::NodeHandle initNode(int argc, char **argv, std::string name){
     // You can populate the node with features by looking at http://wiki.ros.org/ROSNodeTutorialC%2B%2B
 
     // Create a publisher and name the topic.
-    pubWorldEnv = n.advertise<shepherd_simu::WorldInfo>("world/env", 10);
+    pubWorldEnv = n.advertise<shepherd_simu::WorldInfo>("world/env", 1);
 
     return n;
 }
@@ -26,11 +26,11 @@ ros::NodeHandle initNode(int argc, char **argv, std::string name){
 int main(int argc, char **argv)
 {
     ros::NodeHandle n = initNode(argc, argv, "sim_world");
-    ros::Rate r = ros::Rate(10);
+    ros::Rate r(1);
 
     // Server parameter to include here
-    worldInfo.wind_strength = 1; // N ??
-    worldInfo.wind_angle = 270; // deg  //Le vent vient de l'ouest
+    worldInfo.wind_strength = 3; // m/s/s ??
+    worldInfo.wind_angle = -M_PI/2; // rad sens horaire à partir du nord //Le vent vient de l'ouest
 
     // Main loop.
     while (n.ok())

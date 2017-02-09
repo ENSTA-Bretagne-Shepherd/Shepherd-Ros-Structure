@@ -5,7 +5,6 @@
 #pragma once
 
 // Global variables
-ros::Rate r(10);
 
 // Publishers and subscribers
 /**

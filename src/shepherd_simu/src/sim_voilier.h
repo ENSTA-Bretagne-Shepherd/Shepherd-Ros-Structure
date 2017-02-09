@@ -4,8 +4,13 @@
 
 #pragma once
 
+#include <sailboat.h>
+
 // Global variables
-ros::Rate r(10);
+/**
+ * Initialisation du bateau
+ */
+Sailboat boat(0,0,0);
 
 // Publishers and subscribers
 /**

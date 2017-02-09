@@ -30,7 +30,7 @@ ros::NodeHandle initNode(int argc, char **argv, std::string name){
     // You can populate the node with features by looking at http://wiki.ros.org/ROSNodeTutorialC%2B%2B
 
     // Create a publisher and name the topic.
-    pubSailboatPose = n.advertise<shepherd_disp::SailboatPose>("sailboat/pose_real", 10);
+    pubSailboatPose = n.advertise<shepherd_disp::SailboatPose>("sailboat/pose_real", 100);
 
     // Create suscribers
     subCmd = n.subscribe("sailboat/cmd", 1000, &cmdCallback);
@@ -49,22 +49,24 @@ void cmdCallback(const shepherd_reg::SailboatCmd::ConstPtr& msg)
 }
 void envCallback(const shepherd_simu::WorldInfo::ConstPtr& msg)
 {
-    worldEnv.wind_angle = msg->wind_angle;
-    worldEnv.wind_strength = msg->wind_strength;
+//    worldEnv.wind_angle = msg->wind_angle;
+//    worldEnv.wind_strength = msg->wind_strength;
+    boat.setWindAccel(msg->wind_strength);
+    boat.setWindDir(msg->wind_angle);
     ROS_INFO("World parameters : [%f] [%f]", msg->wind_angle, msg->wind_strength);
 }
 
 int main(int argc, char **argv)
 {
     ros::NodeHandle n = initNode(argc, argv, "sim_voilier");
+    ros::Rate r(100);
 
     // Objects creation
     double dt = r.expectedCycleTime().sec+r.expectedCycleTime().nsec/1000000000.0;
     printf("dt = %f\n",dt);
-    Sailboat boat  = Sailboat(0,0,dt);
 
-    // Server parameter to include here
-    boat.setTargetTriangle(100,100);
+    double accelRate = 10; // Pour accélérer la simulation (le bateau sera donc aussi commandé plus lentement)
+    boat  = Sailboat(0,0,dt*accelRate);
 
     // Main loop.
     while (n.ok())
