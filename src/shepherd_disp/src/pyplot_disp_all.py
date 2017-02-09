@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import rospy
-import rosnode
 from shepherd_disp.msg import SailboatPose
 import matplotlib.pyplot as plt
 import numpy as np
