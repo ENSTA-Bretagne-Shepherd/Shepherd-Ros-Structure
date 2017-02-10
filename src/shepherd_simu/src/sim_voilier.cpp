@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     double dt = r.expectedCycleTime().sec+r.expectedCycleTime().nsec/1000000000.0;
     printf("dt = %f\n",dt);
 
-    double accelRate = 10; // Pour accélérer la simulation (le bateau sera donc aussi commandé plus lentement)
+    double accelRate = 1; // Pour accélérer la simulation (le bateau sera donc aussi commandé plus lentement)
     boat  = Sailboat(0,0,dt*accelRate);
 
     // Main loop.

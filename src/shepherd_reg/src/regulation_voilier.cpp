@@ -62,7 +62,7 @@ public:
     deltag=(1/M_PI)*(atan(tan(0.5*dtheta)));
     deltavmax=0.5*M_PI*(0.5*(cos(wind-thetabar)+1));
     // Update the command message
-    cmd.rudder_angle = deltag;
+    cmd.rudder_angle = deltag*2;
     cmd.sail_angle = deltavmax;
   }
 

@@ -53,14 +53,14 @@ HULL = np.array([[-1,  5,  7, 7, 5, -1, -1, -1],
                  [-2, -2, -1, 1, 2,  2, -2, -2],
                  [ 1,  1,  1, 1, 1,  1,  1,  1]])
 
-def draw_triangle(cx, cy):
+def draw_triangle(cx, cy, range):
 
-    pt1x = cx + 50 * np.cos(1 * 2 * np.pi/3);
-    pt1y = cy + 50 * np.sin(1 * 2 * np.pi/3);
-    pt2x = cx + 50 * np.cos(2 * 2 * np.pi/3);
-    pt2y = cy + 50 * np.sin(2 * 2 * np.pi/3);
-    pt3x = cx + 50 * np.cos(3 * 2 * np.pi/3);
-    pt3y = cy + 50 * np.sin(3 * 2 * np.pi/3);
+    pt1x = cx + range * np.cos(1 * 2 * np.pi/3);
+    pt1y = cy + range * np.sin(1 * 2 * np.pi/3);
+    pt2x = cx + range * np.cos(2 * 2 * np.pi/3);
+    pt2y = cy + range * np.sin(2 * 2 * np.pi/3);
+    pt3x = cx + range * np.cos(3 * 2 * np.pi/3);
+    pt3y = cy + range * np.sin(3 * 2 * np.pi/3);
     triangle = np.array([[pt1x, pt2x, pt3x, pt1x],
                          [pt1y, pt2y, pt3y, pt1y],
                          [   1,    1,    1,    1]])
@@ -149,17 +149,21 @@ while not rospy.is_shutdown() and not closed:
 
         plt.plot(sb.pose.x, sb.pose.y, 'ro')
 
-        maxID = np.max([len(sb.histX),len(sb.histY)])
+        maxID = np.min([np.max([len(sb.histX),len(sb.histY)]),400])
         x = sb.histX[0:maxID]
         y = sb.histY[0:maxID]
         plt.plot(x, y, 'g')
 
         hull = draw_sailboat(sb.pose.x, sb.pose.y, sb.pose.theta)
-        triangle = draw_triangle(sb.cx, sb.cy)
+        triangleIn = draw_triangle(sb.cx, sb.cy, 50-10*1.5)
+        triangle = draw_triangle(sb.cx, sb.cy, 50)
+        triangleOut = draw_triangle(sb.cx, sb.cy, 50+10*1.5)
         if sb.cx == 0 and sb.cy == 0:
             print "ZEEEERROOOOOO : " + k
 
         plt.plot(triangle[0], triangle[1], 'b', linewidth=1)
+        plt.plot(triangleIn[0], triangleIn[1], 'r-', linewidth=1)
+        plt.plot(triangleOut[0], triangleOut[1], 'r-', linewidth=1)
         plt.plot(hull[0], hull[1], 'k', linewidth=2)
 
         # update axis
@@ -171,4 +175,5 @@ while not rospy.is_shutdown() and not closed:
     plt.quiver(minX+10, minY+10, wind_strength*np.cos(wind_dir), wind_strength*np.sin(wind_dir))
 
     plt.axis([minX - 150, maxX + 150, minY - 150, maxY + 150])
+    plt.axis('equal')
     plt.pause(rate.sleep_dur.to_sec())

@@ -9,8 +9,9 @@ Sailboat::Sailboat(double x,double y,double dt)
     theta =-3.0; //deg donc le bateau commence vers l'ouest
     v = 1; omega = 0.0;  phi = 0.5; phiPoint = 0;
     Jx = 3000.0; Jz = 10000.0; // moments d'inertie
-    beta=0.1;  rg=2.0;  alphatheta=6000;  m=300.0;
-    alphaf=1.0;  rv=1.0;  alphag=2000.0; l=1.0;  alphav=1000.0;
+    beta=0.1;  rg=2.0;  alphatheta=6000;  m=300.0; // kg
+    alphaf=1.0;  rv=1.0;  alphag=4000.0; // portance du gouvernail
+    l=1.0;  alphav=1000.0;
     a=2;
     psi=M_PI;  //vent
     eta = 16000;     hv = 4.00;  //Roulis
