@@ -16,9 +16,9 @@ def draw_triangle():
     pt2y = cy + 50 * np.sin(2 * 2 * np.pi/3);
     pt3x = cx + 50 * np.cos(3 * 2 * np.pi/3);
     pt3y = cy + 50 * np.sin(3 * 2 * np.pi/3);
-    triangle = np.array([pt1x, pt2x, pt3x, pt1x],
-                        [pt1y, pt2y, pt3y, pt1y]
-                        [   1,    1,    1,    1])
+    triangle = np.array([[pt1x, pt2x, pt3x, pt1x],
+                         [pt1y, pt2y, pt3y, pt1y],
+                         [   1,    1,    1,    1]])
     return triangle
 
 def draw_sailboat():
