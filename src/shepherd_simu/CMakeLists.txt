@@ -10,8 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   std_msgs
   message_generation
-  shepherd_disp
-  shepherd_reg
+  shepherd_msg
 )
 
 ## System dependencies are found with CMake's conventions
@@ -52,12 +51,12 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-        FILES
-        WorldInfo.msg
+# add_message_files(
+#         FILES
+#         WorldInfo.msg
         #   Message1.msg
         #   Message2.msg
-)
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -77,8 +76,8 @@ add_message_files(
 generate_messages(
         DEPENDENCIES
         roscpp
-        std_msgs  # Or other packages containing msgs
-        geometry_msgs
+        # std_msgs  # Or other packages containing msgs
+        # geometry_msgs
 )
 
 ################################################
@@ -142,15 +141,18 @@ set(CUSTOM_INCLUDE_SRC
         include/sailboat.cpp
         include/buoy.cpp)
 add_executable(sim_voilier src/sim_voilier.cpp ${CUSTOM_INCLUDE_SRC})
+add_executable(sim_buoy src/sim_buoy.cpp ${CUSTOM_INCLUDE_SRC})
 add_executable(sim_world src/sim_world.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(sim_voilier ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(sim_buoy ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(sim_world ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(sim_voilier ${catkin_LIBRARIES})
+target_link_libraries(sim_buoy ${catkin_LIBRARIES})
 target_link_libraries(sim_world ${catkin_LIBRARIES})
 
 #############

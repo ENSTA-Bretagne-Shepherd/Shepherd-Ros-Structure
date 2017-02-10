@@ -3,11 +3,11 @@
 #include "buoy.h"
 
 Buoy buoy(0,0,0,0,0,0);
-
+std_msgs::Float64 u;
 ros::Publisher pubBuoyPose;
-geometry_msgs::Pose buoyPose;
+geometry_msgs::Point buoyPose;
 
-ros::subcriber subCmd;
+ros::Subscriber subCmd;
 
 void cmdCallback(const std_msgs::Float64::ConstPtr& msg);
 
