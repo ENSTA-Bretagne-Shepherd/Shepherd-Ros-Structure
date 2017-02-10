@@ -133,7 +133,15 @@ include_directories(
 # add_dependencies(shepherd_disp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
- add_executable(shepherd_disp_node src/DisplayNode.cpp)
+ add_executable(shepherd_disp_node src/DisplayNode.cpp
+src/buoy.cpp
+src/networktools.cpp
+src/sailboat.cpp
+
+
+
+
+)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
