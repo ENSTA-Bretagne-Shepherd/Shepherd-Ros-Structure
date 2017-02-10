@@ -13,7 +13,7 @@ ros::NodeHandle initNode(int argc, char **argv, std::string name){
   ros::NodeHandle n;
 
   // publisher
-  pubBuoyPose = n.advertise<geometry_msgs::Pose>("buoy/pose_real",1000);
+  pubBuoyPose = n.advertise<geometry_msgs::Point>("buoy/pose_real",1000);
 
   // subcriber
   subCmd = n.subscribe("buoy/cmd",1000,&cmdCallback);
@@ -39,7 +39,7 @@ int main(int argc, char **argv){
 
   double accelRate =10;
 
-  buoy = Buoy(0,0,0,0,0,accelRate*dt);
+  buoy = Buoy(10,42,31,45,0,accelRate*dt);
 
 
 
