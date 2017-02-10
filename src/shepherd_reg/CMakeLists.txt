@@ -129,15 +129,16 @@ include_directories(include ${catkin_INCLUDE_DIRS}
 
 ## Declare a C++ executable
 add_executable(regulation_voilier src/regulation_voilier.cpp)
+add_executable(regulation_bouee src/regulation_bouee.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(regulation_voilier ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(regulation_bouee ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(regulation_voilier
-  ${catkin_LIBRARIES}
-)
+target_link_libraries(regulation_voilier  ${catkin_LIBRARIES})
+target_link_libraries(regulation_bouee  ${catkin_LIBRARIES})
 
 #############
 ## Install ##
