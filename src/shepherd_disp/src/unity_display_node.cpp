@@ -2,14 +2,14 @@
 #include "std_msgs/String.h"
 #include <iostream>
 #include "unity_api/unityapi.cpp"
-#include "shepherd_disp/SailboatPose.h"
+#include "shepherd_msg/SailboatPose.h"
 
 // the connection to unity api must be in a global scope
 // DisplayAPI* displayptr;
 /**
  * This tutorial demonstrates simple receipt of messages over the ROS system.
  */
-void chatterCallback(const shepherd_disp::SailboatPose::ConstPtr& msg)
+void chatterCallback(const shepherd_msg::SailboatPose::ConstPtr& msg)
 {
   ROS_INFO("I received a position: ([%f], [%f], [%f])", (msg->pose).x, (msg->pose).y, (msg->pose).theta);
 

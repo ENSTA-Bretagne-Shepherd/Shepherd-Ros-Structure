@@ -15,7 +15,6 @@ class Sailboat
 {    public:
             double dt;
             double fg,fv,gamma,deltav; //link variables
-//            double deltag,deltavmax; //controls
 
             // Variables d'etat
             double x; //!state variable
@@ -31,15 +30,13 @@ class Sailboat
             double eta;//viscosite
             double hv; // hauteur de centre de pousse
 
-            int q;
-            double cx,cy;// centre du triangle
-            int iseg;// numero du segment
-
-            void setTargetTriangle(double cx, double cy);
             void clock(double deltag,double deltavmax);
-            void controller();
             explicit Sailboat(double x,double y, double dt);
         ~Sailboat();
+
+    void setWindAccel(double a);
+
+    void setWindDir(double psi);
 };
 
 #endif // sailboat_H
