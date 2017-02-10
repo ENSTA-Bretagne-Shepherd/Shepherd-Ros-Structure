@@ -3,6 +3,7 @@
 #include <math.h>
 #include "shepherd_disp/SailboatPose.h"
 #include <iostream>
+#include <GL/glut.h>
 
 
 void chatterCallback(const shepherd_disp::SailboatPose::ConstPtr& msg)
