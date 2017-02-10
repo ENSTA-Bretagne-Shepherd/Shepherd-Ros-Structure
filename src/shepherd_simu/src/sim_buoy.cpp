@@ -32,8 +32,17 @@ int main(int argc, char const *argv[]) {
   ros:NodeHandle n = initNode(argc,argv,"sim_buoy");
   ros::Rate r(100);
 
-  // Intances
-  buoy = Buoy(0,0,0,0,0,0)
+  //
+
+  double dt = r.expectedCycleTime().sec+r.expectedCycleTime().nsec/1000000000.0;
+  printf("dt = %f\n",dt);
+
+  double accelRate =10
+
+  buoy = Buoy(0,0,0,0,0,accelRate*dt)
+
+
+
   // Main loop
   while (n.ok()) {
 
