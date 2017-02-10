@@ -9,3 +9,5 @@ cmake-build-debug/
 *.sublime-project
 *.sublime-workspace
 src/cmake-build-debug
+*.pyc
+
