@@ -3,32 +3,33 @@
 #include "std_msgs/Float64.h"
 #include "std_msgs/Float64MultiArray.h"
 #include <iostream>
-#include "shepherd_disp/SailboatPose.h"
-#include "shepherd_reg/SailboatCmd.h"
+#include "shepherd_msg/SailboatPose.h"
+#include "shepherd_msg/SailboatCmd.h"
 #include <math.h>
+#include <shepherd_msg/WorldInfo.h>
 
 class TriangleController
 {
 public:
   TriangleController(){
-    pose_sub = node.subscribe("sailboat/all", 1, &TriangleController::updatePose, this);
-    wind_sub = node.subscribe("env/wind", 1, &TriangleController::updateWind, this);
+    pose_sub = node.subscribe("sailboat/pose_est", 1, &TriangleController::updatePose, this);
+    wind_sub = node.subscribe("world/env", 1, &TriangleController::updateWind, this);
     center_sub = node.subscribe("sailboat/triangleCenter", 1, &TriangleController::updateCenter, this);
 
-    cmd_pub = node.advertise<shepherd_reg::SailboatCmd>("sailboat/cmd", 1);
+    cmd_pub = node.advertise<shepherd_msg::SailboatCmd>("sailboat/cmd", 1);
 
     iseg = 0; q = 1;
   }
 
-  void updatePose(const shepherd_disp::SailboatPose::ConstPtr& msg){
+  void updatePose(const shepherd_msg::SailboatPose::ConstPtr& msg){
     x = (msg->pose).x;
     y = (msg->pose).y;
     theta = (msg->pose).theta;
     ROS_INFO("I received a position: ([%f], [%f], [%f])", x, y, theta);
   }
 
-  void updateWind(const std_msgs::Float64::ConstPtr& msg){
-    wind = msg->data;
+  void updateWind(const shepherd_msg::WorldInfo::ConstPtr& msg){
+    wind = msg->wind_angle;
     ROS_INFO("I received a wind: [%f]", wind);
   }
 
@@ -99,7 +100,7 @@ private:
   // variables obscure de Dyson
   int iseg, q;
 
-  shepherd_reg::SailboatCmd cmd;
+  shepherd_msg::SailboatCmd cmd;
 
   // helper methods
   double sign(double a){

@@ -7,6 +7,7 @@ project(shepherd_loc)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
+  shepherd_msg
 )
 
 ## System dependencies are found with CMake's conventions
