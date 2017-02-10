@@ -64,6 +64,6 @@
 
 	<!-- DISPLAY -->
 
-	<node name="display_matplotlib" pkg="shepherd_disp" type="pyplot_disp_all.py"/>
+	<node name="display_matplotlib" pkg="shepherd_disp" type="pyplot_disp_all.py" output="screen"/>
 
 </launch>

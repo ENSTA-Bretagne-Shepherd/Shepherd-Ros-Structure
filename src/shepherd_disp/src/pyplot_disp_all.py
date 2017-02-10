@@ -78,7 +78,7 @@ def draw_sailboat(x, y, theta):
 
 def update_disp(msg, sailboat_name):
     global sailboats
-    print 'Updating', sailboat_name
+    # print 'Updating', sailboat_name
     sailboats[sailboat_name].add_new_pose(msg.pose)
 
 
@@ -89,7 +89,7 @@ def update_wind(msg):
 
 def update_center(msg, sailboat_name):
     global sailboats
-    print 'Updating center', sailboat_name
+    # print 'Updating center', sailboat_name
     sailboats[sailboat_name].cx = msg.data[0]
     sailboats[sailboat_name].cy = msg.data[1]
 
@@ -98,7 +98,6 @@ def handle_close(event):
     global closed
     print 'Plot window closed !'
     closed = True
-
 
 # Initialize node
 rospy.init_node('display_simple')
@@ -123,7 +122,7 @@ rospy.Subscriber('sailboat4/pose_real', SailboatPose,
 rospy.Subscriber('world/env', WorldInfo, update_wind)
 rospy.Subscriber('sailboat1/triangleCenter', Float64MultiArray, update_center, callback_args='sailboat1')
 rospy.Subscriber('sailboat2/triangleCenter', Float64MultiArray, update_center, callback_args='sailboat2')
-rospy.Subscriber('sailboat3/triangleCenter', Float64MultiArray, update_center, callback_args='sailboat2')
+rospy.Subscriber('sailboat3/triangleCenter', Float64MultiArray, update_center, callback_args='sailboat3')
 rospy.Subscriber('sailboat4/triangleCenter', Float64MultiArray, update_center, callback_args='sailboat4')
 
 # Figure for display
@@ -137,24 +136,39 @@ rate = rospy.Rate(10)
 # Boolean for the state of the drawing window
 closed = False
 
+wind_dir, wind_strength = 0, 0
+
 while not rospy.is_shutdown() and not closed:
     plt.clf()
     # Display axis
     minX, minY = 0, 0
     maxX, maxY = 0, 0
+
     for k in sailboats:
         sb = sailboats[k]
+
         plt.plot(sb.pose.x, sb.pose.y, 'ro')
-        plt.plot(sb.histX, sb.histY, 'g')
+
+        maxID = np.max([len(sb.histX),len(sb.histY)])
+        x = sb.histX[0:maxID]
+        y = sb.histY[0:maxID]
+        plt.plot(x, y, 'g')
+
         hull = draw_sailboat(sb.pose.x, sb.pose.y, sb.pose.theta)
         triangle = draw_triangle(sb.cx, sb.cy)
-        plt.quiver(minX+10,minY+10, wind_strength*np.cos(wind_dir), wind_strength*np.sin(wind_dir))
+        if sb.cx == 0 and sb.cy == 0:
+            print "ZEEEERROOOOOO : " + k
+
         plt.plot(triangle[0], triangle[1], 'b', linewidth=1)
         plt.plot(hull[0], hull[1], 'k', linewidth=2)
+
         # update axis
         maxX = max(maxX, sb.pose.x)
         maxY = max(maxY, sb.pose.y)
         minX = min(minX, sb.pose.x)
         minY = min(minY, sb.pose.y)
+
+    plt.quiver(minX+10, minY+10, wind_strength*np.cos(wind_dir), wind_strength*np.sin(wind_dir))
+
     plt.axis([minX - 150, maxX + 150, minY - 150, maxY + 150])
     plt.pause(rate.sleep_dur.to_sec())
