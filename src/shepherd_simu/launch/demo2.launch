@@ -1,0 +1,19 @@
+<!-- Ce fichier de launch lance les noeuds:
+	- regulation_voilier (qui s'abonne a la position reelle (pas capteur))
+	- simulation_voilier avec le script python
+	- display_voilier avec matplotlib -->
+<launch>
+	<node name="regulation_voilier" pkg="shepherd_reg" type="regulation_voilier">
+		<remap from="sailboat/pose_est" to="sailboat/pose_real"/>
+	</node>
+
+	<node name="simulation_voilier" pkg="shepherd_simu" type="sim_voilier">
+    </node>
+
+    <node name="simulation_environnement" pkg="shepherd_simu" type="sim_world">
+    </node>
+
+	<node name="display_matplotlib" pkg="shepherd_disp" type="simple_disp.py">
+    </node>
+
+</launch>

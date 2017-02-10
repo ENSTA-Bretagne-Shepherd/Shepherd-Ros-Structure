@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(shepherd_disp)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -7,8 +9,10 @@ project(shepherd_disp)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
-  message_generation
   geometry_msgs
+  std_msgs
+  shepherd_msg
+#  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -45,11 +49,12 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
+#add_message_files(
+#  FILES
+#  SailboatPose.msg
 #   Message1.msg
-  SailboatPose.msg
-)
+#   Message2.msg
+#)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -66,11 +71,12 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  std_msgs  # Or other packages containing msgs
-  geometry_msgs
-)
+#generate_messages(
+#  DEPENDENCIES
+#  roscpp
+#  std_msgs  # Or other packages containing msgs
+#  geometry_msgs
+#)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -104,7 +110,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES shepherd_disp
-#  CATKIN_DEPENDS roscpp rospy
+# CATKIN_DEPENDS message_runtime
 #  DEPENDS system_lib
 )
 
@@ -115,9 +121,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
-include_directories(
-  ${catkin_INCLUDE_DIRS}
-)
+include_directories( include ${catkin_INCLUDE_DIRS})
 
 ## Declare a C++ library
 # add_library(shepherd_disp
@@ -130,16 +134,14 @@ include_directories(
 # add_dependencies(shepherd_disp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(shepherd_disp_node src/shepherd_disp_node.cpp)
+add_executable(unity_display_node src/unity_display_node.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(shepherd_disp_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(unity_display_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(shepherd_disp_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(unity_display_node ${catkin_LIBRARIES})
 
 #############
 ## Install ##

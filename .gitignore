@@ -6,4 +6,8 @@ gen
 build/
 devel/
 cmake-build-debug/
+src/cmake-build-debug
+*.sublime-project
+*.sublime-workspace
 *.pyc
+

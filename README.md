@@ -2,6 +2,26 @@
 
 __Version ROS__: Indigo
 
+## Demo
+
+Pour afficher un premier exemple de demonstration (simulation voilier uniquement):
+
+```bash
+$ catkin_make
+$ source devel/setup.bash
+$ roslaunch shepherd_simu demo1.launch
+```
+
+Pour visionner les noeuds et changer les constantes d'environnement (vent, centres des triangles).
+Dans un __nouveau terminal__:
+
+```bash
+$ source devel/setup.bash
+$ rqt --perspective-file preferences/rqt/Observation.perspective
+```
+
+## Informations
+
 ### Structure des noeuds
 
 L'architecture des noeuds de ce repository est disponible [ici](https://github.com/ENSTA-Bretagne-Shepherd/Shepherd-Ros-Structure/blob/master/structure.pdf)
