@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 
     // Server parameter to include here
     worldInfo.wind_strength = 3; // m/s/s ??
-    worldInfo.wind_angle = -M_PI/2; // rad sens horaire à partir du nord //Le vent vient de l'ouest
+    worldInfo.wind_angle = 3.0; // rad sens trigo à partir de l'est //Le vent vient de l'ouest
 
     // Main loop.
     while (n.ok())

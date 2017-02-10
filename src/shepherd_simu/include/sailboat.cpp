@@ -6,7 +6,7 @@ Sailboat::Sailboat(double x,double y,double dt)
     this->dt = dt;
     this->x=x; //m
     this->y=y; //m
-    theta =-3.0; //deg
+    theta =-3.0; //deg donc le bateau commence vers l'ouest
     v = 1; omega = 0.0;  phi = 0.5; phiPoint = 0;
     Jx = 3000.0; Jz = 10000.0; // moments d'inertie
     beta=0.1;  rg=2.0;  alphatheta=6000;  m=300.0;
@@ -16,18 +16,10 @@ Sailboat::Sailboat(double x,double y,double dt)
     eta = 16000;     hv = 4.00;  //Roulis
     //ax=-1000;ay=-2000,bx=1000;by=2000;   //sinLine with wind
     //ax=-1000;ay=0,bx=1000;by=0;   //sinLine against wind
-    q=1;
-    iseg=0;
 }
 
 Sailboat::~Sailboat()
 {
-}
-
-void Sailboat::setTargetTriangle(double cx, double cy)
-{
-    this->cx = cx;
-    this->cy = cy;
 }
 
 double sign(double a)
@@ -39,9 +31,11 @@ void Sailboat::clock(double deltag,double deltavmax)  // The model is described 
     double yw_ap=a*sin(psi-theta);
     double psi_ap=atan2(yw_ap,xw_ap);   //Apparent wind
     double a_ap=sqrt(xw_ap*xw_ap+yw_ap*yw_ap);
+
     gamma=cos(psi_ap)+cos(deltavmax);
     if (gamma<0) {deltav=M_PI+psi_ap;} //voile en drapeau
     else  if (sin(-psi_ap)>0) deltav=deltavmax;   else deltav=-deltavmax;
+
     fg = alphag*v*sin(deltag);
     fv = alphav*a_ap*sin(deltav-psi_ap);
     x += (v*cos(theta)+beta*a*cos(psi))*dt;
