@@ -18,23 +18,23 @@ Sailboat boat(0,0,0);
  * Position du bateau
  */
 ros::Publisher pubSailboatPose;
-shepherd_disp::SailboatPose sailboatPose;
+shepherd_msg::SailboatPose sailboatPose;
 
 /**
  * SUBSCRIBER
  * Commande du bateau
  */
 ros::Subscriber subCmd;
-shepherd_reg::SailboatCmd sailboatCmd;
-void cmdCallback(const shepherd_reg::SailboatCmd::ConstPtr& msg);
+shepherd_msg::SailboatCmd sailboatCmd;
+void cmdCallback(const shepherd_msg::SailboatCmd::ConstPtr& msg);
 
 /**
  * SUBSCRIBER
  * Variables d'environnement
  */
 ros::Subscriber subEnv;
-shepherd_simu::WorldInfo worldEnv;
-void envCallback(const shepherd_simu::WorldInfo::ConstPtr& msg);
+shepherd_msg::WorldInfo worldEnv;
+void envCallback(const shepherd_msg::WorldInfo::ConstPtr& msg);
 
 /**
  * Initialise la node

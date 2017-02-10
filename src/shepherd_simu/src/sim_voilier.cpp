@@ -1,8 +1,8 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
-#include "shepherd_disp/SailboatPose.h"
-#include "shepherd_reg/SailboatCmd.h"
-#include "shepherd_simu/WorldInfo.h"
+#include "shepherd_msg/SailboatPose.h"
+#include "shepherd_msg/SailboatCmd.h"
+#include "shepherd_msg/WorldInfo.h"
 #include "sim_voilier.h"
 #include "sailboat.h"
 
@@ -30,7 +30,7 @@ ros::NodeHandle initNode(int argc, char **argv, std::string name){
     // You can populate the node with features by looking at http://wiki.ros.org/ROSNodeTutorialC%2B%2B
 
     // Create a publisher and name the topic.
-    pubSailboatPose = n.advertise<shepherd_disp::SailboatPose>("sailboat/pose_real", 100);
+    pubSailboatPose = n.advertise<shepherd_msg::SailboatPose>("sailboat/pose_real", 100);
 
     // Create suscribers
     subCmd = n.subscribe("sailboat/cmd", 1000, &cmdCallback);
@@ -41,13 +41,13 @@ ros::NodeHandle initNode(int argc, char **argv, std::string name){
 
 // ======================== NODE PROCESS ========================
 
-void cmdCallback(const shepherd_reg::SailboatCmd::ConstPtr& msg)
+void cmdCallback(const shepherd_msg::SailboatCmd::ConstPtr& msg)
 {
     sailboatCmd.rudder_angle = msg->rudder_angle;
     sailboatCmd.sail_angle = msg->sail_angle;
     ROS_INFO("Boat commands : [%f] [%f]", msg->rudder_angle, msg->sail_angle);
 }
-void envCallback(const shepherd_simu::WorldInfo::ConstPtr& msg)
+void envCallback(const shepherd_msg::WorldInfo::ConstPtr& msg)
 {
 //    worldEnv.wind_angle = msg->wind_angle;
 //    worldEnv.wind_strength = msg->wind_strength;
