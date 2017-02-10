@@ -27,7 +27,7 @@ void cmdCallback(const std_msgs::Float64::ConstPtr& msg){
 
 }
 
-int int main(int argc, char const *argv[]) {
+int main(int argc, char const *argv[]) {
 
   ros:NodeHandle n = initNode(argc,argv,"sim_buoy");
   ros::Rate r(100);
