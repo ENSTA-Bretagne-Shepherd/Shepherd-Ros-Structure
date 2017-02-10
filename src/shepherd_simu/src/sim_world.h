@@ -12,7 +12,7 @@
  * Etat de l'environnement
  */
 ros::Publisher pubWorldEnv;
-shepherd_simu::WorldInfo worldInfo;
+shepherd_msg::WorldInfo worldInfo;
 
 
 /**

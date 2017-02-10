@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(shepherd_reg)
+project(shepherd_msg)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -7,9 +7,9 @@ project(shepherd_reg)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
+  geometry_msgs
   std_msgs
-  shepherd_msg
-#  message_generation
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -46,11 +46,14 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-#add_message_files(
-#  FILES
+add_message_files(
+    FILES
+    SailboatCmd.msg
+    SailboatPose.msg
+    WorldInfo.msg
 #   Message1.msg
-#  SailboatCmd.msg
-#)
+#   Message2.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -67,10 +70,11 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-#generate_messages(
-#  DEPENDENCIES
-#  std_msgs  # Or other packages containing msgs
-#)
+generate_messages(
+   DEPENDENCIES
+   std_msgs  # Or other packages containing msgs
+   geometry_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -103,7 +107,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES shepherd_reg
+#  LIBRARIES shepherd_msg
+  CATKIN_DEPENDS message_runtime
 #  CATKIN_DEPENDS roscpp rospy
 #  DEPENDS system_lib
 )
@@ -115,35 +120,31 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
-include_directories(include ${catkin_INCLUDE_DIRS}
+include_directories(
+  ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
-# add_library(shepherd_reg
-#   src/${PROJECT_NAME}/shepherd_reg.cpp
+# add_library(shepherd_msg
+#   src/${PROJECT_NAME}/shepherd_msg.cpp
 # )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(shepherd_reg ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(shepherd_msg ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-add_executable(regulation_voilier src/regulation_voilier.cpp)
-add_executable(regulation_bouee src/regulation_bouee.cpp)
+# add_executable(shepherd_msg_node src/shepherd_msg_node.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(regulation_voilier ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(regulation_bouee ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(shepherd_msg_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(regulation_voilier
-  ${catkin_LIBRARIES}
-)
-target_link_libraries(regulation_bouee
-  ${catkin_LIBRARIES}
-)
+# target_link_libraries(shepherd_msg_node
+#   ${catkin_LIBRARIES}
+# )
 
 #############
 ## Install ##
@@ -160,7 +161,7 @@ target_link_libraries(regulation_bouee
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS shepherd_reg shepherd_reg_node
+# install(TARGETS shepherd_msg shepherd_msg_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -185,7 +186,7 @@ target_link_libraries(regulation_bouee
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_shepherd_reg.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_shepherd_msg.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

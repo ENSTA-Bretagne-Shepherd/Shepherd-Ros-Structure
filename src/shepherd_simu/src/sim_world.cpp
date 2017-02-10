@@ -2,7 +2,7 @@
 // Created by tag on 09/02/17.
 //
 
-#include <shepherd_simu/WorldInfo.h>
+#include <shepherd_msg/WorldInfo.h>
 #include "ros/ros.h"
 #include "sim_world.h"
 
@@ -16,7 +16,7 @@ ros::NodeHandle initNode(int argc, char **argv, std::string name){
     // You can populate the node with features by looking at http://wiki.ros.org/ROSNodeTutorialC%2B%2B
 
     // Create a publisher and name the topic.
-    pubWorldEnv = n.advertise<shepherd_simu::WorldInfo>("world/env", 1);
+    pubWorldEnv = n.advertise<shepherd_msg::WorldInfo>("world/env", 1);
 
     return n;
 }
