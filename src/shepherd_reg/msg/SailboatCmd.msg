@@ -1,0 +1,2 @@
+float64 sail_angle
+float64 rudder_angle
