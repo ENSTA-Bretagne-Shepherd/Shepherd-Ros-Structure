@@ -3,6 +3,7 @@ import rospy
 from shepherd_msg.msg import SailboatPose
 from shepherd_msg.msg import WorldInfo
 from std_msgs.msg import Float64MultiArray
+from geometry_msgs import Point
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -44,6 +45,17 @@ class SailboatPoseHolder(object):
         if len(self.histT) > SailboatPoseHolder.MAX_HIST_SIZE:
             del(self.histT[0])
 
+class BuoyPoseHolder(SailboatPoseHolder):
+
+    def __init__(self,pose):
+        super().__init__(pose)
+
+    def add_new_pose(self,pose):
+        super().add_new_pose(pose)
+
+    def update_hist(self,x,y,theta):
+        super().update_hist(x, y, theta)
+
 
 # --------------------------------------------------------------------------------
 # Constants
@@ -75,11 +87,19 @@ def draw_sailboat(x, y, theta):
     hullr = np.dot(R, HULL)
     return hullr
 
+def draw_buoy(xb,yb):
+    angle = np.arange(0,3*np.pi,np.pi/10)
+    buoy = [xb+np.cos(buoy),yb+np.sin(buoy)]
+    return buoy
 
-def update_disp(msg, sailboat_name):
-    global sailboats
+
+def update_disp(msg, name):
+    global sailboats, buoys
     # print 'Updating', sailboat_name
-    sailboats[sailboat_name].add_new_pose(msg.pose)
+    if name in sailboats:
+        sailboats[name].add_new_pose(msg.pose)
+    else:
+        buoys[name].add_new_pose(msg.pose)
 
 
 def update_wind(msg):
@@ -87,11 +107,15 @@ def update_wind(msg):
     wind_dir, wind_strength = msg.wind_angle, msg.wind_strength
 
 
-def update_center(msg, sailboat_name):
-    global sailboats
+def update_center(msg, name):
+    global sailboats, buoys
     # print 'Updating center', sailboat_name
-    sailboats[sailboat_name].cx = msg.data[0]
-    sailboats[sailboat_name].cy = msg.data[1]
+    if name in sailboats:
+        sailboats[sailboat_name].cx = msg.data[0]
+        sailboats[sailboat_name].cy = msg.data[1]
+    else:
+        buoys[name].cx = msg.data[0]
+        buoys[name].cy = msg.data[1]
 
 
 def handle_close(event):
@@ -104,10 +128,26 @@ rospy.init_node('display_simple')
 
 
 # Sailboats pose
-sailboats = {'sailboat1': SailboatPoseHolder(SailboatPose().pose),
-             'sailboat2': SailboatPoseHolder(SailboatPose().pose),
-             'sailboat3': SailboatPoseHolder(SailboatPose().pose),
-             'sailboat4': SailboatPoseHolder(SailboatPose().pose)}
+sailboats = {
+            'sailboat1': SailboatPoseHolder(SailboatPose().pose),
+            'sailboat2': SailboatPoseHolder(SailboatPose().pose),
+            'sailboat3': SailboatPoseHolder(SailboatPose().pose),
+            'sailboat4': SailboatPoseHolder(SailboatPose().pose)
+            }
+
+buoys = {
+        'buoy0': BuoyPoseHolder(Point),
+        'buoy1': BuoyPoseHolder(Point),
+        'buoy1': BuoyPoseHolder(Point),
+        'buoy3': BuoyPoseHolder(Point),
+        'buoy4': BuoyPoseHolder(Point),
+        'buoy5': BuoyPoseHolder(Point),
+        'buoy6': BuoyPoseHolder(Point),
+        'buoy7': BuoyPoseHolder(Point),
+        'buoy8': BuoyPoseHolder(Point),
+        'buoy9': BuoyPoseHolder(Point)
+        }
+
 
 # Subscriber to the sailboat position
 rospy.Subscriber('sailboat1/pose_real', SailboatPose,
@@ -118,6 +158,17 @@ rospy.Subscriber('sailboat3/pose_real', SailboatPose,
                  update_disp, callback_args='sailboat3')
 rospy.Subscriber('sailboat4/pose_real', SailboatPose,
                  update_disp, callback_args='sailboat4')
+
+rospy.Subscriber('buoy0/pose_real', Point,update_disp, callback_args='buoy0')
+rospy.Subscriber('buoy1/pose_real', Point,update_disp, callback_args='buoy1')
+rospy.Subscriber('buoy2/pose_real', Point,update_disp, callback_args='buoy2')
+rospy.Subscriber('buoy3/pose_real', Point,update_disp, callback_args='buoy3')
+rospy.Subscriber('buoy4/pose_real', Point,update_disp, callback_args='buoy4')
+rospy.Subscriber('buoy5/pose_real', Point,update_disp, callback_args='buoy5')
+rospy.Subscriber('buoy6/pose_real', Point,update_disp, callback_args='buoy6')
+rospy.Subscriber('buoy7/pose_real', Point,update_disp, callback_args='buoy7')
+rospy.Subscriber('buoy8/pose_real', Point,update_disp, callback_args='buoy8')
+rospy.Subscriber('buoy9/pose_real', Point,update_disp, callback_args='buoy9')
 
 rospy.Subscriber('world/env', WorldInfo, update_wind)
 rospy.Subscriber('sailboat1/triangleCenter', Float64MultiArray, update_center, callback_args='sailboat1')
@@ -171,6 +222,16 @@ while not rospy.is_shutdown() and not closed:
         maxY = max(maxY, sb.pose.y)
         minX = min(minX, sb.pose.x)
         minY = min(minY, sb.pose.y)
+
+    for by in buoys:
+
+        plt.plot(sb.pose.x, sb.pose.y, 'ko')
+        buoy = draw_buoy(by.pose.x, by.pose.y)
+        plt.fill(buoy[0], buoy[1], 'r',)
+
+
+
+
 
     plt.quiver(minX+10, minY+10, wind_strength*np.cos(wind_dir), wind_strength*np.sin(wind_dir))
 
