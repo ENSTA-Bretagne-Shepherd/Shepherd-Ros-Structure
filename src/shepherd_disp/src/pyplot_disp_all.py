@@ -99,6 +99,7 @@ def update_disp(msg, name):
     if name in sailboats:
         sailboats[name].add_new_pose(msg.pose)
     else:
+        # NOTE: verifier format msg
         buoys[name].add_new_pose(msg.pose)
 
 
@@ -110,12 +111,13 @@ def update_wind(msg):
 def update_center(msg, name):
     global sailboats, buoys
     # print 'Updating center', sailboat_name
-    if name in sailboats:
-        sailboats[sailboat_name].cx = msg.data[0]
-        sailboats[sailboat_name].cy = msg.data[1]
-    else:
-        buoys[name].cx = msg.data[0]
-        buoys[name].cy = msg.data[1]
+    # if name in sailboats:
+    sailboats[sailboat_name].cx = msg.data[0]
+    sailboats[sailboat_name].cy = msg.data[1]
+    # else:
+    #     # NOTE: verifier format msg
+    #     buoys[name].cx = msg.data[0]
+    #     buoys[name].cy = msg.data[1]
 
 
 def handle_close(event):
@@ -134,7 +136,7 @@ sailboats = {
             'sailboat3': SailboatPoseHolder(SailboatPose().pose),
             'sailboat4': SailboatPoseHolder(SailboatPose().pose)
             }
-
+# NOTE: verifier si Point est le bon message
 buoys = {
         'buoy0': BuoyPoseHolder(Point),
         'buoy1': BuoyPoseHolder(Point),
@@ -225,7 +227,7 @@ while not rospy.is_shutdown() and not closed:
 
     for by in buoys:
 
-        plt.plot(sb.pose.x, sb.pose.y, 'ko')
+        plt.plot(by.pose.x, by.pose.y, 'ko')
         buoy = draw_buoy(by.pose.x, by.pose.y)
         plt.fill(buoy[0], buoy[1], 'r',)
 
