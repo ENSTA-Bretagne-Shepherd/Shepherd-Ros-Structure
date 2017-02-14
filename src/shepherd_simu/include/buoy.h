@@ -19,6 +19,19 @@ class Buoy
 
         double m;//!Masse de Buoy
         double vol;//!Volume de Buoy
+        double rho_w;//!masse volumique de leau salee
+        double mvol;//!masse volumique de la bouee
+        double volBal;//!vollume dans le ballast
+        double S;//!Surface ballayee lorsque le ballast se remplit/vide
+        double delta;//!rapport de la masse volumique de l'eau sur celui de la bouee
+        double mu;//!coefficient de resistance de Stokes
+        double theta;
+
+        
+        double vx;//!composante du vecteur vitesse d'une particule dans un courant selon la direction x
+        double vy;//!composante du vecteur vitesse d'une particule dans un courant selon la direction x
+        double Dx;//!composante selon l'axe x du differentiel du vecteur vitesse par rapport au temps(Du/Dt)
+        double Dy;//!composante selon l'axe y du differentiel du vecteur vitesse par rapport au temps(Du/Dt)
 
         double beta;//!Parameter for Lorentz
         double sigma;//!Parameter for Lorentz
@@ -29,6 +42,7 @@ class Buoy
 
         double u;//!Commande
         double Xdot[3];//!Vecteur de vitesse de Buoy
+        double Xdot2[3];//!Vecteur de acceleration de Buoy
 
         /**
          * Equations cinematiques pour les attracteurs de Lorentz
@@ -41,6 +55,23 @@ class Buoy
         void sinLine(double simuTime);
         void pendulum(void);
         void stateEq(void);
+
+        
+    /**
+     * Equations dynamique d'un vortex
+     */
+        void vortex(void);
+
+    /**
+     * Equation determinant la vitesse d'une particule dans le courant
+     */
+        void eqParticule(void);
+
+    /**
+     * Equation permettant de rotater les plan des courants
+     */
+        void rotation(void);
+
 
         /**
          * Setter for the command ub

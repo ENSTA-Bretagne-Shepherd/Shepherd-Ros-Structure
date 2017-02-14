@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(shepherd_disp)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -9,7 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   geometry_msgs
   std_msgs
-  message_generation
+  shepherd_msg
+#  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -46,12 +49,12 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  SailboatPose.msg
+#add_message_files(
+#  FILES
+#  SailboatPose.msg
 #   Message1.msg
 #   Message2.msg
-)
+#)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -68,12 +71,12 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  roscpp
-  std_msgs  # Or other packages containing msgs
-  geometry_msgs
-)
+#generate_messages(
+#  DEPENDENCIES
+#  roscpp
+#  std_msgs  # Or other packages containing msgs
+#  geometry_msgs
+#)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -107,7 +110,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES shepherd_disp
- CATKIN_DEPENDS message_runtime
+# CATKIN_DEPENDS message_runtime
 #  DEPENDS system_lib
 )
 

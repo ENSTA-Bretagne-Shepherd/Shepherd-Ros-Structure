@@ -1,0 +1,2 @@
+float64 wind_angle
+float64 wind_strength

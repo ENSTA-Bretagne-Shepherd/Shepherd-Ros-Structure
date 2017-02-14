@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(shepherd_simu)
 
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -9,9 +10,10 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   geometry_msgs
   std_msgs
-  message_generation
-  shepherd_disp
-  shepherd_reg
+  shepherd_msg
+#  message_generation
+
+
 )
 
 ## System dependencies are found with CMake's conventions
@@ -21,11 +23,11 @@ find_package(catkin REQUIRED COMPONENTS
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-catkin_python_setup()
-catkin_install_python(
-  PROGRAMS src/sailboat_sim.py
-  DESTINATION models_bin
-  )
+#catkin_python_setup()
+#catkin_install_python(
+#  PROGRAMS src/sailboat_sim.py
+#  DESTINATION models_bin
+#  )
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -52,12 +54,13 @@ catkin_install_python(
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-        FILES
-        #SailboatPose.msg
+
+#add_message_files(
+#        FILES
         #   Message1.msg
         #   Message2.msg
-)
+#)
+
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -74,12 +77,14 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
+
 #generate_messages(
 #        DEPENDENCIES
 #        roscpp
 #        std_msgs  # Or other packages containing msgs
 #        geometry_msgs
 #)
+
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -114,6 +119,7 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES shepherd_simu
 #  CATKIN_DEPENDS roscpp rospy
+#  CATKIN_DEPENDS message_runtime
 #  DEPENDS system_lib
 )
 
@@ -140,16 +146,20 @@ include_directories( include ${catkin_INCLUDE_DIRS})
 set(CUSTOM_INCLUDE_SRC
         include/sailboat.cpp
         include/buoy.cpp)
-add_executable(shepherd_simu src/Node-sim_voilier.cpp ${CUSTOM_INCLUDE_SRC})
+add_executable(sim_voilier src/sim_voilier.cpp ${CUSTOM_INCLUDE_SRC})
+add_executable(sim_buoy src/sim_buoy.cpp ${CUSTOM_INCLUDE_SRC})
+add_executable(sim_world src/sim_world.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(shepherd_simu ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(sim_voilier ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(sim_buoy ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(sim_world ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(shepherd_simu
-  ${catkin_LIBRARIES}
-)
+target_link_libraries(sim_voilier ${catkin_LIBRARIES})
+target_link_libraries(sim_buoy ${catkin_LIBRARIES})
+target_link_libraries(sim_world ${catkin_LIBRARIES})
 
 #############
 ## Install ##

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import rospy
-from shepherd_disp.msg import SailboatPose
+from shepherd_msg.msg import SailboatPose
+from shepherd_msg.msg import WorldInfo
+from std_msgs.msg import Float64MultiArray
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -20,10 +22,16 @@ class SailboatPoseHolder(object):
         self.histX = []
         self.histY = []
         self.histT = []
+        self.cx = 0
+        self.cy = 0
 
     def add_new_pose(self, pose):
         self.pose = pose
         self.update_hist(pose.x, pose.y, pose.theta)
+
+    # def updateTriCenter(self, cx, cy):
+    #     self.cy = cy
+    #     self.cx = cx
 
     def update_hist(self, x, y, theta):
         self.histX.append(x)
@@ -41,10 +49,22 @@ class SailboatPoseHolder(object):
 # Constants
 # --------------------------------------------------------------------------------
 # Sailboat drawing
-HULL = np.array([[-1, 5, 7, 7, 5, -1, -1, -1],
-                 [- 2, -2, -1, 1, 2, 2, -2, -2],
-                 [1, 1, 1, 1, 1, 1, 1, 1]])
+HULL = np.array([[-1,  5,  7, 7, 5, -1, -1, -1],
+                 [-2, -2, -1, 1, 2,  2, -2, -2],
+                 [ 1,  1,  1, 1, 1,  1,  1,  1]])
 
+def draw_triangle(cx, cy, range):
+
+    pt1x = cx + range * np.cos(1 * 2 * np.pi/3);
+    pt1y = cy + range * np.sin(1 * 2 * np.pi/3);
+    pt2x = cx + range * np.cos(2 * 2 * np.pi/3);
+    pt2y = cy + range * np.sin(2 * 2 * np.pi/3);
+    pt3x = cx + range * np.cos(3 * 2 * np.pi/3);
+    pt3y = cy + range * np.sin(3 * 2 * np.pi/3);
+    triangle = np.array([[pt1x, pt2x, pt3x, pt1x],
+                         [pt1y, pt2y, pt3y, pt1y],
+                         [   1,    1,    1,    1]])
+    return triangle
 
 def draw_sailboat(x, y, theta):
     # Rotation matrix
@@ -58,8 +78,20 @@ def draw_sailboat(x, y, theta):
 
 def update_disp(msg, sailboat_name):
     global sailboats
-    print 'Updating', sailboat_name
+    # print 'Updating', sailboat_name
     sailboats[sailboat_name].add_new_pose(msg.pose)
+
+
+def update_wind(msg):
+    global wind_dir, wind_strength
+    wind_dir, wind_strength = msg.wind_angle, msg.wind_strength
+
+
+def update_center(msg, sailboat_name):
+    global sailboats
+    # print 'Updating center', sailboat_name
+    sailboats[sailboat_name].cx = msg.data[0]
+    sailboats[sailboat_name].cy = msg.data[1]
 
 
 def handle_close(event):
@@ -67,9 +99,15 @@ def handle_close(event):
     print 'Plot window closed !'
     closed = True
 
-
 # Initialize node
 rospy.init_node('display_simple')
+
+
+# Sailboats pose
+sailboats = {'sailboat1': SailboatPoseHolder(SailboatPose().pose),
+             'sailboat2': SailboatPoseHolder(SailboatPose().pose),
+             'sailboat3': SailboatPoseHolder(SailboatPose().pose),
+             'sailboat4': SailboatPoseHolder(SailboatPose().pose)}
 
 # Subscriber to the sailboat position
 rospy.Subscriber('sailboat1/pose_real', SailboatPose,
@@ -81,11 +119,11 @@ rospy.Subscriber('sailboat3/pose_real', SailboatPose,
 rospy.Subscriber('sailboat4/pose_real', SailboatPose,
                  update_disp, callback_args='sailboat4')
 
-# Sailboats pose
-sailboats = {'sailboat1': SailboatPoseHolder(SailboatPose().pose),
-             'sailboat2': SailboatPoseHolder(SailboatPose().pose),
-             'sailboat3': SailboatPoseHolder(SailboatPose().pose),
-             'sailboat4': SailboatPoseHolder(SailboatPose().pose)}
+rospy.Subscriber('world/env', WorldInfo, update_wind)
+rospy.Subscriber('sailboat1/triangleCenter', Float64MultiArray, update_center, callback_args='sailboat1')
+rospy.Subscriber('sailboat2/triangleCenter', Float64MultiArray, update_center, callback_args='sailboat2')
+rospy.Subscriber('sailboat3/triangleCenter', Float64MultiArray, update_center, callback_args='sailboat3')
+rospy.Subscriber('sailboat4/triangleCenter', Float64MultiArray, update_center, callback_args='sailboat4')
 
 # Figure for display
 fig = plt.figure("Display")
@@ -98,21 +136,44 @@ rate = rospy.Rate(10)
 # Boolean for the state of the drawing window
 closed = False
 
+wind_dir, wind_strength = 0, 0
+
 while not rospy.is_shutdown() and not closed:
     plt.clf()
     # Display axis
     minX, minY = 0, 0
     maxX, maxY = 0, 0
+
     for k in sailboats:
         sb = sailboats[k]
+
         plt.plot(sb.pose.x, sb.pose.y, 'ro')
-        plt.plot(sb.histX, sb.histY, 'g')
+
+        maxID = np.min([np.max([len(sb.histX),len(sb.histY)]),400])
+        x = sb.histX[0:maxID]
+        y = sb.histY[0:maxID]
+        plt.plot(x, y, 'g')
+
         hull = draw_sailboat(sb.pose.x, sb.pose.y, sb.pose.theta)
+        triangleIn = draw_triangle(sb.cx, sb.cy, 50-10*1.5)
+        triangle = draw_triangle(sb.cx, sb.cy, 50)
+        triangleOut = draw_triangle(sb.cx, sb.cy, 50+10*1.5)
+        # if sb.cx == 0 and sb.cy == 0:
+        #     print "ZEEEERROOOOOO : " + k
+
+        plt.plot(triangle[0], triangle[1], 'b', linewidth=1)
+        plt.plot(triangleIn[0], triangleIn[1], 'r-', linewidth=1)
+        plt.plot(triangleOut[0], triangleOut[1], 'r-', linewidth=1)
         plt.plot(hull[0], hull[1], 'k', linewidth=2)
+
         # update axis
         maxX = max(maxX, sb.pose.x)
         maxY = max(maxY, sb.pose.y)
         minX = min(minX, sb.pose.x)
         minY = min(minY, sb.pose.y)
+
+    plt.quiver(minX+10, minY+10, wind_strength*np.cos(wind_dir), wind_strength*np.sin(wind_dir))
+
     plt.axis([minX - 150, maxX + 150, minY - 150, maxY + 150])
+    plt.axis('equal')
     plt.pause(rate.sleep_dur.to_sec())
