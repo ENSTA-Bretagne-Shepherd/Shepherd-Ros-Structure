@@ -68,6 +68,11 @@ def update_trace():
         del(thetat[0])
 
 
+def draw_buoy(xb=0,yb=0):
+    angle = np.arange(0,3*np.pi,np.pi/10)
+    buoy = [xb+np.cos(buoy),yb+np.sin(buoy)]
+    return buoy
+
 # Initialize node
 rospy.init_node('display_simple')
 
