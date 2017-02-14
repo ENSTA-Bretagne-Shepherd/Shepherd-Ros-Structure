@@ -80,6 +80,7 @@ rospy.init_node('display_simple')
 rospy.Subscriber('sailboat/pose_real', SailboatPose, update_disp)
 rospy.Subscriber('world/env', WorldInfo, update_wind)
 rospy.Subscriber('sailboat/triangleCenter', Float64MultiArray, update_center)
+rospy.Subscriber('buoy/pose_real',Point,update_disp) # Subcriber to buoy
 
 # Data to display
 x, y, theta = 0, 0, 0
