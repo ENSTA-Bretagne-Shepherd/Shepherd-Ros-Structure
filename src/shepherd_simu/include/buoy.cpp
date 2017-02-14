@@ -144,7 +144,7 @@ void Buoy::clock(void)  // The model is described in "L. Jaulin Modélisation et
     y = y+dt*Xdot[1];
     z = z+dt*Xdot[2];
     //TODO : mettre un min et un max
-    volBal = volBal+S*dt;
+    volBal = volBal+u*S*dt;
     if(volBal<1){volBal = 1;}
     else if(volBal>vol-1){volBal = vol-1;}
 

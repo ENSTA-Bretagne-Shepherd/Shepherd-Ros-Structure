@@ -22,7 +22,7 @@ ros::NodeHandle initNode(int argc, char **argv, std::string name){
 
 void cmdCallback(const std_msgs::Float64::ConstPtr& msg){
 
-  buoy.u = msg -> data;
+  buoy.setCommand(msg -> data);
   ROS_INFO("BUOY COMMAND: [%f] ",msg -> data);
 
 }
