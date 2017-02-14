@@ -51,9 +51,9 @@ add_message_files(
     SailboatCmd.msg
     SailboatPose.msg
     WorldInfo.msg
-    buoyPoseInterval.msg
-    depth_sensor.msg
-    ping.msg
+    BuoyPoseInterval.msg
+    Depth_sensor.msg
+    Ping.msg
     RosInterval.msg
     RosIntervalVector.msg
 #   Message1.msg
