@@ -75,7 +75,13 @@ class BuoyBetterController
 public:
   BuoyBetterController(){
     pose_sub = node.subscribe("buoy/pose_est", 1, &BuoyBetterController::updatePose, this);
-//name :simu2loc type msg:Msg_Simu2Loc
+
+    // subscribe aux ping des voiliers
+    voiliers_sub1 = node.subscribe("sailboat1/ping", 1, &BuoyBetterController::updateVoilier, this);
+    voiliers_sub2 = node.subscribe("sailboat2/ping", 1, &BuoyBetterController::updateVoilier, this);
+    voiliers_sub3 = node.subscribe("sailboat3/ping", 1, &BuoyBetterController::updateVoilier, this);
+    voiliers_sub4 = node.subscribe("sailboat4/ping", 1, &BuoyBetterController::updateVoilier, this);
+
     cmd_pub = node.advertise<std_msgs::Float64>("buoy/cmd", 1);
     vertSpeed = 1;
     lastTime = ros::Time::now().toSec();
@@ -111,9 +117,40 @@ public:
     vc  = (yd-ydl)/dt;
   }
 
+  void updateVoilier(const msg::ping::ConstPtr& msg){
+	switch(msg->id){
+	case 1:
+		xmin1=msg->xmin;
+		xmax1=msg->xmax;
+		ymin1=msg->ymin;
+		ymax1=msg->ymax;
+		break;
+	case 2:
+		xmin2=msg->xmin;
+		xmax2=msg->xmax;
+		ymin2=msg->ymin;
+		ymax2=msg->ymax;
+		break;
+	case 3:
+		xmin3=msg->xmin;
+		xmax3=msg->xmax;
+		ymin3=msg->ymin;
+		ymax3=msg->ymax;
+		break;
+	case 4:
+		xmin4=msg->xmin;
+		xmax4=msg->xmax;
+		ymin4=msg->ymin;
+		ymax4=msg->ymax;
+		break;
+	}
+  }
+
   void updateCommand(){
 
-
+    // calcul du barycentre des 4 voiliers
+    xBar=( (xMax1+xMin1)/2 + (xMax2+xMin2)/2 + (xMax3+xMin3)/2 + (xMax4+xMin4)/2 )/4;
+    yBar=( (yMax1+yMin1)/2 + (yMax2+yMin2)/2 + (yMax3+yMin3)/2 + (yMax4+yMin4)/2 )/4;
 
     if(z<10 && vertSpeed==-1)
     {
@@ -150,7 +187,21 @@ private:
   //
   ros::Subscriber pose_sub;
   ros::Publisher cmd_pub;
-  //Msg_Simu2Loc
+
+  // inscription aux positions des voiliers
+  ros::Subscriber voiliers_sub1;
+  ros::Subscriber voiliers_sub2;
+  ros::Subscriber voiliers_sub3;
+  ros::Subscriber voiliers_sub4; 
+
+  // coordonnees des 4 voiliers
+  float xmin1, xmax1, ymin1, ymax1;
+  float xmin2, xmax2, ymin2, ymax2;
+  float xmin3, xmax3, ymin3, ymax3;
+  float xmin4, xmax4, ymin4, ymax4;
+
+  // coordonnees du barycentre
+  float xBar,yBar;
 
   float x, y, z;//! coordonnees du point courant
   float xg, yg;//!coordonnees du centre de gravite des voiliers
