@@ -12,11 +12,11 @@ class TriangleController
 {
 public:
   TriangleController(){
-    pose_sub = node.subscribe("sailboat/pose_est", 1, &TriangleController::updatePose, this);
-    wind_sub = node.subscribe("world/env", 1, &TriangleController::updateWind, this);
-    center_sub = node.subscribe("sailboat/triangleCenter", 1, &TriangleController::updateCenter, this);
+    pose_sub = node.subscribe("pose_est", 1, &TriangleController::updatePose, this);
+    wind_sub = node.subscribe("/world/env", 1, &TriangleController::updateWind, this);
+    center_sub = node.subscribe("triangleCenter", 1, &TriangleController::updateCenter, this);
 
-    cmd_pub = node.advertise<shepherd_msg::SailboatCmd>("sailboat/cmd", 1);
+    cmd_pub = node.advertise<shepherd_msg::SailboatCmd>("cmd", 1);
 
     iseg = 0; q = 1;
   }

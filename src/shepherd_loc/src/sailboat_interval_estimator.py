@@ -9,8 +9,7 @@
 """
 
 import rospy
-from shepherd_loc.msg import RosInterval, SailboatPoseInterval
-from shepherd_disp.msg import SailboatPose
+from shepherd_msg.msg import RosInterval, SailboatPoseInterval, SailboatPose
 
 # --------------------------------------------------------------------------------
 # ROS Node initialisation
@@ -43,8 +42,11 @@ else:
 # --------------------------------------------------------------------------------
 # Publisher of the interval of pose
 # --------------------------------------------------------------------------------
-pose_pub = rospy.Publisher('sailboat/pose_interval',
+pose_pub = rospy.Publisher('pose_interval',
                            SailboatPoseInterval, queue_size=1)
+
+est_pub = rospy.Publisher('pose_est',
+                          SailboatPose, queue_size=1)
 
 
 # --------------------------------------------------------------------------------
@@ -58,9 +60,11 @@ def publish_pose_interval(msg):
     poseI.theta = RosInterval(
         msg.pose.theta - imu_noise, msg.pose.theta + imu_noise)
     pose_pub.publish(poseI)
+    # for the moment pose_est=pose_noisy
+    est_pub.publish(msg)
 
 
 sb_pose_sub = rospy.Subscriber(
-    'sailboat/pose_mes', SailboatPose, publish_pose_interval)
+    'pose_noisy', SailboatPose, publish_pose_interval)
 
 rospy.spin()

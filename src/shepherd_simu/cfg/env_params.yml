@@ -1,5 +1,8 @@
 # This Configuration contains all informations about the simulation
 
+# Simulation speed
+sim_speed: 2
+
 # Enviroment parameters
 wind_amplitude: 3
 wind_frequency: 0.1  # Hz
