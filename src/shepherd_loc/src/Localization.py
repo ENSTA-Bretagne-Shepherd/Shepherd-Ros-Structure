@@ -6,8 +6,11 @@ from shepherd.msg import Msg_Loc2Simu
 from shepherd.msg import Msg_pressure
 from shepherd_localization_TDOA import *
 from pyibex import *
+from point import Point
+import numpy as np
 
-def callback_S2L(msg):
+def callback_S2L(msg): 
+	global DT, voilier
 	Id = int(msg.id[-1])
 	xmin = msg.xmin
 	xmax = msg.xmax
@@ -44,7 +47,7 @@ def callback_z(msg):
 	zmax = msg.zmax
 
 def dtArrivee(DT):
-	mini = min(DT)
+	mini = np.min(DT)
 	for i in range(3):
 		DT[i] = DT[i]-mini
 	return DT
@@ -53,6 +56,7 @@ def dtArrivee(DT):
 sailboats = [[Interval(0),Interval(0),0,0,0,0],[Interval(0),Interval(0),0,0,0,0],[Interval(0),Interval(0),0,0,0,0],[Interval(0),Interval(0),0,0,0,0]]
 voilier = [0,0,0,0]
 DT = [0,0,0,0]
+zmin, zmax = 0, 0
 hourdep, mindep, secdep, mildep = 0, 0, 0, 0
 rospy.init_node('loc')
 sub_ping = rospy.Subscriber('simu2loc', Msg_Simu2Loc, callback_S2L)

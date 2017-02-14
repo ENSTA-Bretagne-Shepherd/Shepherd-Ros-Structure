@@ -1,7 +1,7 @@
 from pyibex import *
 from vibes import *
 from myinterval import distSep3Dtdoa, fuse
-#from point import *
+from point import *
 
 
 def localization(sailboats, zmin, zmax, hourdep, mindep, secdep, mildep, DT):
