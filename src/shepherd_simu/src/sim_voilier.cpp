@@ -5,6 +5,7 @@
 #include "shepherd_msg/WorldInfo.h"
 #include "sim_voilier.h"
 #include "sailboat.h"
+#include <stdlib.h>
 
 // ======================== NODE INIT ===========================
 
@@ -31,6 +32,8 @@ ros::NodeHandle initNode(int argc, char **argv, std::string name){
 
     // Create a publisher and name the topic.
     pubSailboatPose = n.advertise<shepherd_msg::SailboatPose>("sailboat/pose_real", 100);
+    // Create a publisher and name the topic.
+    pubSailboatPoseNoisy = n.advertise<shepherd_msg::SailboatPose>("sailboat/pose_noisy", 100);
 
     // Create suscribers
     subCmd = n.subscribe("sailboat/cmd", 1000, &cmdCallback);
@@ -56,6 +59,15 @@ void envCallback(const shepherd_msg::WorldInfo::ConstPtr& msg)
     ROS_INFO("World parameters : [%f] [%f]", msg->wind_angle, msg->wind_strength);
 }
 
+double rand01(){
+    return ((double) rand() / (RAND_MAX));
+}
+
+double fRand(double fMin, double fMax){
+    double r = rand01();
+    return fMin + rand01() * (fMax - fMin);
+}
+
 int main(int argc, char **argv)
 {
     ros::NodeHandle n = initNode(argc, argv, "sim_voilier");
@@ -67,6 +79,11 @@ int main(int argc, char **argv)
 
     double accelRate = 1; // Pour accélérer la simulation (le bateau sera donc aussi commandé plus lentement)
     boat  = Sailboat(0,0,dt*accelRate);
+
+    // Get parameters of the simulation
+    double pose_noise;
+    ros::param::param<double>("pose_noise", pose_noise, 0.1);
+    std::cout << "Pose noise:" << pose_noise << std::endl;
 
     // Main loop.
     while (n.ok())
@@ -80,6 +97,16 @@ int main(int argc, char **argv)
 
         // Publish the message.
         pubSailboatPose.publish(sailboatPose);
+
+        // Publish a noisy pose
+        sailboatPoseNoisy.pose.theta = fRand(boat.theta-pose_noise, boat.theta+pose_noise);
+        sailboatPoseNoisy.pose.x = fRand(boat.x-pose_noise, boat.x+pose_noise);
+        sailboatPoseNoisy.pose.y = fRand(boat.y-pose_noise, boat.y+pose_noise);
+
+        // Publish the message.
+        pubSailboatPoseNoisy.publish(sailboatPoseNoisy);
+
+
 
         // Loop
         ros::spinOnce();

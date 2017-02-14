@@ -10,7 +10,7 @@
 
 	<!-- SAILBOAT 1 -->
 	<node name="regulation_voilier1" pkg="shepherd_reg" type="regulation_voilier">
-		<remap from="sailboat/pose_est" to="sailboat1/pose_real"/>
+		<remap from="sailboat/pose_est" to="sailboat1/pose_noisy"/>
 		<remap from="sailboat/cmd" to="sailboat1/cmd"/>
 		<remap from="sailboat/triangleCenter" to="sailboat1/triangleCenter"/>
 	</node>
@@ -21,11 +21,9 @@
 	</node>
 
 
-
-
 	<!-- SAILBOAT 2-->
 	<node name="regulation_voilier2" pkg="shepherd_reg" type="regulation_voilier">
-		<remap from="sailboat/pose_est" to="sailboat2/pose_real"/>
+		<remap from="sailboat/pose_est" to="sailboat2/pose_noisy"/>
 		<remap from="sailboat/cmd" to="sailboat2/cmd"/>
 		<remap from="sailboat/triangleCenter" to="sailboat2/triangleCenter"/>
 	</node>
@@ -38,7 +36,7 @@
 
 	<!-- SAILBOAT 3 -->
 	<node name="regulation_voilier3" pkg="shepherd_reg" type="regulation_voilier">
-		<remap from="sailboat/pose_est" to="sailboat3/pose_real"/>
+		<remap from="sailboat/pose_est" to="sailboat3/pose_noisy"/>
 		<remap from="sailboat/cmd" to="sailboat3/cmd"/>
 		<remap from="sailboat/triangleCenter" to="sailboat3/triangleCenter"/>
 	</node>
@@ -51,7 +49,7 @@
 
 	<!-- SAILBOAT 4 -->
 	<node name="regulation_voilier4" pkg="shepherd_reg" type="regulation_voilier">
-		<remap from="sailboat/pose_est" to="sailboat4/pose_real"/>
+		<remap from="sailboat/pose_est" to="sailboat4/pose_noisy"/>
 		<remap from="sailboat/cmd" to="sailboat4/cmd"/>
 		<remap from="sailboat/triangleCenter" to="sailboat4/triangleCenter"/>
 	</node>

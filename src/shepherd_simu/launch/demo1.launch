@@ -4,7 +4,7 @@
 	- display_voilier avec matplotlib -->
 <launch>
 	<node name="regulation_voilier" pkg="shepherd_reg" type="regulation_voilier">
-		<remap from="sailboat/pose_est" to="sailboat/pose_real"/>
+		<remap from="sailboat/pose_est" to="sailboat/pose_noisy"/>
 	</node>
 
 	<node name="simulation_voilier" pkg="shepherd_simu" type="sailboat_sim.py"/>

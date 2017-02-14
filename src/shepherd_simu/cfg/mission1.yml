@@ -1,0 +1,4 @@
+# This configuration file defines all the parameters of the mission
+
+# Sailboat sensors noise
+pose_noise : 4
