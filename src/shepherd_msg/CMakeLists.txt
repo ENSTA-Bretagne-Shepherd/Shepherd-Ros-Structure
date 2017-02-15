@@ -54,6 +54,7 @@ add_message_files(
     BuoyPoseInterval.msg
     Depth_sensor.msg
     Ping.msg
+    PingVector.msg
     RosInterval.msg
     RosIntervalVector.msg
 #   Message1.msg

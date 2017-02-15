@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import rospy
-from shepherd_msg.msg import SailboatPose, Ping
+from shepherd_msg.msg import SailboatPose, PingVector, Ping, RosInterval
 from geometry_msgs.msg import Point
 from math import sqrt
 
@@ -44,6 +44,12 @@ def update_buoy_pose(msg, topic):
     buoy_poses[topic] = msg
 
 
+def extract_buoy_name_from_topic(topic):
+    for s in topic.split('/'):
+        if s.startswith('buoy'):
+            return s
+
+
 def get_all_published_buoy_topics():
     """
     get all published buoy topics
@@ -66,16 +72,19 @@ def get_all_published_buoy_topics():
 
 buoy_poses = get_all_published_buoy_topics()
 
+buoy_pubs = {}
 for topic in buoy_poses.iterkeys():
     rospy.Subscriber(topic, Point, update_buoy_pose, callback_args=topic)
-
+    b_name = extract_buoy_name_from_topic(topic)
+    pub = rospy.Publisher(b_name + '/ping', PingVector, queue_size=1)
+    buoy_pubs[topic] = pub
 
 # --------------------------------------------------------------------------------
 # Send a ping periodically
 # --------------------------------------------------------------------------------
 
-# Publisher
-# ping_pub = rospy.Publisher('')
+# Sound celerity (en m/s)
+c_sound = 1500
 
 # Period
 ping_period = 10
@@ -90,10 +99,26 @@ else:
 rate = rospy.Rate(1. / ping_period)
 
 
+def generatePing(sb_name, sb_pose, send_time, d_to_buoy):
+    p = Ping()
+    p.id = sb_name
+    p.x = RosInterval()
+    p.x.lb = sb_pose.pose.x - 0.3
+    p.x.ub = sb_pose.pose.x + 0.3
+    p.y = RosInterval()
+    p.y.lb = sb_pose.pose.y - 0.3
+    p.y.ub = sb_pose.pose.y + 0.3
+    p.dep = rospy.Time.now()
+    delay = d_to_buoy / c_sound
+    p.arr = rospy.Time.from_sec(p.dep.to_sec() + delay)
+    return p
+
+
 def send_pings():
     global sb_pose, buoy_poses
     for b_topic, b_pose in buoy_poses.iteritems():
         b_name = b_topic.replace('/pose_real', '').replace('/', '')
+        pings_for_buoy = PingVector()
         for name, pose in sb_pose.iteritems():
             dx = pose.pose.x - b_pose.x
             dy = pose.pose.y - b_pose.y
@@ -101,6 +126,9 @@ def send_pings():
             dz = b_pose.z
             d = sqrt(dx**2 + dy**2 + dz**2)
             print '{} is at {} m from {}'.format(b_name, d, name)
+            ping = generatePing(name, pose, rospy.Time.now(), d)
+            pings_for_buoy.pings.append(ping)
+        buoy_pubs[b_topic].publish(pings_for_buoy)
         print '-'
     print '----'
 
