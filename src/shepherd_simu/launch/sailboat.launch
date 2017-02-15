@@ -1,7 +1,7 @@
 <!-- Simulation d'un voilier avec affichage (matplotlib)-->
 <launch>
 
-	<include file="$(find shepherd_simu)/launch/demo-1-sailboat-no-display.launch"/>
+	<include file="$(find shepherd_simu)/launch/sailboat-no-display.launch"/>
 
 	<node name="display_matplotlib"       pkg="shepherd_disp" type="simple_disp.py"/>
 

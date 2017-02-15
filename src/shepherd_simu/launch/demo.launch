@@ -1,12 +1,9 @@
-<!-- Ce fichier de launch lance les noeuds:
-	- regulation_voilier (qui s'abonne a la position reelle (pas capteur))
-	- simulation_voilier avec le script python
-	- display_voilier avec matplotlib -->
+<!-- Simulation d'un voilier avec un environnement qui publie les conditions-->
 <launch>
 	<rosparam command="load" file="$(find shepherd_simu)/cfg/env_params.yml" />
 
     <node name="simulation_environnement" pkg="shepherd_simu" type="sim_world"/>
 
-    <include file="$(find shepherd_simu)/launch/demo-1-sailboat-no-display.launch"/>
+    <include file="$(find shepherd_simu)/launch/sailboat.launch" ns="sailboat"/>
 
 </launch>

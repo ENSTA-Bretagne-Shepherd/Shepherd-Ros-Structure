@@ -11,13 +11,13 @@
 
     <!-- 4 sailboats -->
 
-    <include file="$(find shepherd_simu)/launch/demo-1-sailboat-no-display.launch" ns="sailboat1"/>
+    <include file="$(find shepherd_simu)/launch/sailboat-no-display.launch" ns="sailboat1"/>
 
-    <include file="$(find shepherd_simu)/launch/demo-1-sailboat-no-display.launch" ns="sailboat2"/>
+    <include file="$(find shepherd_simu)/launch/sailboat-no-display.launch" ns="sailboat2"/>
 
-    <include file="$(find shepherd_simu)/launch/demo-1-sailboat-no-display.launch" ns="sailboat3"/>
+    <include file="$(find shepherd_simu)/launch/sailboat-no-display.launch" ns="sailboat3"/>
 
-    <include file="$(find shepherd_simu)/launch/demo-1-sailboat-no-display.launch" ns="sailboat4"/>
+    <include file="$(find shepherd_simu)/launch/sailboat-no-display.launch" ns="sailboat4"/>
 
 	<!-- DISPLAY -->
 
