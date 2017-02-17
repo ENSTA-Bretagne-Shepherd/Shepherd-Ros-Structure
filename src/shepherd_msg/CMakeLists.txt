@@ -48,18 +48,16 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
     FILES
-    SailboatCmd.msg
-    SailboatPose.msg
-    WorldInfo.msg
     BuoyPoseInterval.msg
-    Depth_sensor.msg
+    DepthInterval.msg
     Ping.msg
     PingVector.msg
     RosInterval.msg
     RosIntervalVector.msg
+    SailboatCmd.msg
+    SailboatPose.msg
     SailboatPoseInterval.msg
-#   Message1.msg
-#   Message2.msg
+    WorldInfo.msg
 )
 
 ## Generate services in the 'srv' folder
