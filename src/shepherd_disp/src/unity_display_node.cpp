@@ -25,7 +25,6 @@ private:
     std::string topic_name;
     std::string sailboat_name;
     ros::Subscriber pose_sub;
-
 };
 
 class BuoySubscriber

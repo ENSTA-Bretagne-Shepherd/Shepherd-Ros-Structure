@@ -31,13 +31,13 @@ ros::NodeHandle initNode(int argc, char **argv, std::string name){
     // You can populate the node with features by looking at http://wiki.ros.org/ROSNodeTutorialC%2B%2B
 
     // Create a publisher and name the topic.
-    pubSailboatPose = n.advertise<shepherd_msg::SailboatPose>("sailboat/pose_real", 100);
+    pubSailboatPose = n.advertise<shepherd_msg::SailboatPose>("sailboat/pose_real", 1);
     // Create a publisher and name the topic.
-    pubSailboatPoseNoisy = n.advertise<shepherd_msg::SailboatPose>("sailboat/pose_noisy", 100);
+    pubSailboatPoseNoisy = n.advertise<shepherd_msg::SailboatPose>("sailboat/pose_noisy", 1);
 
     // Create suscribers
-    subCmd = n.subscribe("sailboat/cmd", 1000, &cmdCallback);
-    subEnv = n.subscribe("world/env", 10, &envCallback);
+    subCmd = n.subscribe("sailboat/cmd", 1, &cmdCallback);
+    subEnv = n.subscribe("world/env", 1, &envCallback);
 
     return n;
 }
@@ -71,7 +71,7 @@ double fRand(double fMin, double fMax){
 int main(int argc, char **argv)
 {
     ros::NodeHandle n = initNode(argc, argv, "sim_voilier");
-    ros::Rate r(100);
+    ros::Rate r(10);
 
     // Objects creation
     double dt = r.expectedCycleTime().sec+r.expectedCycleTime().nsec/1000000000.0;
