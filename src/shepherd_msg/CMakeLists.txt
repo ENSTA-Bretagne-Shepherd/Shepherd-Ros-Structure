@@ -56,6 +56,7 @@ add_message_files(
     Ping.msg
     RosInterval.msg
     RosIntervalVector.msg
+    SailboatPoseInterval.msg
 #   Message1.msg
 #   Message2.msg
 )
