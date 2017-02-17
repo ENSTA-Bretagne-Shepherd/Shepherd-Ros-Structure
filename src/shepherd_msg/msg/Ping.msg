@@ -1,0 +1,13 @@
+uint8 id
+float32 xmin
+float32 xmax
+float32 ymin
+float32 ymax
+uint8 hourdep
+uint8 mindep
+uint8 secdep
+uint8 mildep
+uint8 hourarr
+uint8 minarr
+uint8 secarr
+uint8 milarr

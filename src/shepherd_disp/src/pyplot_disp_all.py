@@ -83,13 +83,13 @@ def update_wind(msg):
 def update_center(msg, name):
     global sailboats, buoys
     # print 'Updating center', sailboat_name
-    # if name in sailboats:
-    sailboats[sailboat_name].cx = msg.data[0]
-    sailboats[sailboat_name].cy = msg.data[1]
-    # else:
-    #     # NOTE: verifier format msg
-    #     buoys[name].cx = msg.data[0]
-    #     buoys[name].cy = msg.data[1]
+    if name in sailboats:
+        sailboats[name].cx = msg.data[0]
+        sailboats[name].cy = msg.data[1]
+    else:
+        # NOTE: verifier format msg
+        # buoys[name].cx = msg.data[0]
+        # buoys[name].cy = msg.data[1]
 
 
 def handle_close(event):

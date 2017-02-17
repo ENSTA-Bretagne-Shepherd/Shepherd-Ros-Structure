@@ -1,0 +1,14 @@
+<!-- Simule un voilier:
+	- simulation
+	- regulation
+	- localisation
+	-->
+<launch>
+
+	<node name="regulation_voilier"       pkg="shepherd_reg"  type="regulation_voilier"/>
+
+	<node name="simulation_voilier"       pkg="shepherd_simu" type="sim_voilier"/>
+
+	<node name="localisation_voilier"     pkg="shepherd_loc"  type="sailboat_interval_estimator.py"/>
+
+</launch>

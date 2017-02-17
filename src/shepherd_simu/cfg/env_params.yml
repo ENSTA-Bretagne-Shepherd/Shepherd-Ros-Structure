@@ -1,0 +1,16 @@
+# This Configuration contains all informations about the simulation
+
+# Simulation speed
+sim_speed: 2
+
+# Enviroment parameters
+wind_amplitude: 3
+wind_frequency: 0.1  # Hz
+
+# Sensors error
+sailboat_gps_noise: 5     # meters
+sailboat_imu_noise: 0.1   # degrees
+
+# Actuator error (# the difference between the command and what is really applied)
+sailboat_rudder: 0.1
+sailboat_sail:   0.1
