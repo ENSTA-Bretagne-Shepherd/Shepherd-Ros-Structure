@@ -42,6 +42,19 @@ Buoy::Buoy(int nb, double xb, double yb, double zb, double ub, double dt)
     delta = mvol/rho_w; //delta = rapport de la masse volumique de l'eau sur celui de la bouee
     mu = 1.0; //coefficient de resistance de Stokes
     theta = 10;
+
+    phi_i = 50.0;
+    Ri = 50.0;
+    Xi[0] = 100;
+    Xi[1] = 100;
+    Xi[2] = -100;
+    Xi[3] = -100;
+
+    Yi[0] = 100;
+    Yi[1] = -100;
+    Yi[2] = -100;
+    Yi[3] = 100;
+
 }
 
 void Buoy::lorenz(void)
@@ -97,10 +110,41 @@ double* Buoy::getPos(void)
 }
 
 
-void Buoy::eqParticule(void)
+void Buoy::eqParticuleSimple(void)
 {
     vx = -2*sin(y);
     vy = 2*sin(x);
+
+    Dx = -4*sin(x)*cos(y);
+    Dy = 4*sin(y)*cos(x);
+}
+
+void Buoy::eqParticule(void)
+{
+    double d2;
+    double dvxx, dvyx, dvxy, dvyy;
+    vx = 0;
+    vy = 0;
+    dvxx = 0;
+    dvyx = 0;
+    dvxy = 0;
+    dvyy = 0;
+
+    for (int i=0;i<4;i++)
+    {
+        d2 = (x-Xi[i])*(x-Xi[i])+(y-Yi[i])*(y-Yi[i]);
+
+        vx   += phi_i*2*y*(y-Yi[i])*exp(-1*d2/(Ri*Ri))/(Ri*Ri);
+        vy   -= phi_i*2*x*(x-Xi[i])*exp(-1*d2/(Ri*Ri))/(Ri*Ri);
+
+        dvxx -= phi_i*4*y*(y-Yi[i])*(x-Xi[i])*exp(-1*d2/(Ri*Ri))/(Ri*Ri*Ri*Ri);
+        dvxy += 2*phi_i*exp(-1*d2/(Ri*Ri))/(Ri*Ri)*((2*y-Yi[i])-2*y*(y-Yi[i])*(y-Yi[i]));
+        dvyx -= 2*phi_i*exp(-1*d2/(Ri*Ri))/(Ri*Ri)*((2*x-Xi[i])-2*x*(x-Xi[i])*(x-Xi[i]));
+        dvyy += phi_i*4*x*(y-Yi[i])*(x-Xi[i])*exp(-1*d2/(Ri*Ri))/(Ri*Ri*Ri*Ri);
+    }
+
+    Dx = vx*dvxx+vy*dvxy;
+    Dy = vx*dvyx+vy*dvyy;
 }
 
 void Buoy::vortex(void)
@@ -108,8 +152,6 @@ void Buoy::vortex(void)
     //Dx = vy*0.5*(1+sin(theta*z))*2*cos(y);
     //Dy = vx*0.5*(1+sin(theta*z))*2*cos(x);
     eqParticule();
-    Dx = -4*sin(x)*cos(y);
-    Dy = 4*sin(y)*cos(x);
     mvol = m/(vol-volBal);
     delta = mvol/rho_w;
     Xdot2[0] = delta * Dx - mu * (Xdot[0] - vx);

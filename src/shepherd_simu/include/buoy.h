@@ -17,6 +17,12 @@ class Buoy
         double y;//!State variables
         double z;//!State variables
 
+        int n;//!Id de Buoy
+
+        double u;//!Commande
+        double Xdot[3];//!Vecteur de vitesse de Buoy
+        double Xdot2[3];//!Vecteur de acceleration de Buoy
+
         double m;//!Masse de Buoy
         double vol;//!Volume de Buoy
         double rho_w;//!masse volumique de leau salee
@@ -27,6 +33,10 @@ class Buoy
         double mu;//!coefficient de resistance de Stokes
         double theta;
 
+        double phi_i;//!coefficient gerant la puissance d'aspiration du tourbillon
+        double Ri;//!coefficient obscur
+        double Xi[4];//!abscisse des tourbillons
+        double Yi[4];//!ordonnees des tourbillons
         
         double vx;//!composante du vecteur vitesse d'une particule dans un courant selon la direction x
         double vy;//!composante du vecteur vitesse d'une particule dans un courant selon la direction x
@@ -37,12 +47,6 @@ class Buoy
         double sigma;//!Parameter for Lorentz
         double rho;//!Parameter for Lorentz
         double k;//!Parameter for Lorentz
-
-        int n;//!Id de Buoy
-
-        double u;//!Commande
-        double Xdot[3];//!Vecteur de vitesse de Buoy
-        double Xdot2[3];//!Vecteur de acceleration de Buoy
 
         /**
          * Equations cinematiques pour les attracteurs de Lorentz
@@ -66,6 +70,7 @@ class Buoy
      * Equation determinant la vitesse d'une particule dans le courant
      */
         void eqParticule(void);
+        void eqParticuleSimple(void);
 
     /**
      * Equation permettant de rotater les plan des courants
