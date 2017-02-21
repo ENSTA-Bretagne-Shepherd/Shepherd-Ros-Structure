@@ -5,7 +5,9 @@
 Buoy buoy(0,0,0,0,0,0);
 std_msgs::Float64 u;
 ros::Publisher pubBuoyPose;
+ros::Publisher pubBuoyDepth;
 geometry_msgs::Point buoyPose;
+std_msgs::Float64 buoyDepthNoisy;
 
 ros::Subscriber subCmd;
 
