@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.plt as plt
+import matplotlib.pyplot as plt
 
 # Sailboat drawing
 HULL = np.array([[-1,  5,  7, 7, 5, -1, -1, -1],
