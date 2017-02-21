@@ -70,6 +70,7 @@ private:
 /*
 
  */
+/*
 class BuoyBetterController
 {
 public:
@@ -215,7 +216,7 @@ private:
   std_msgs::Float64 u;
 };
 
-
+*/
 
 
 int main(int argc, char **argv)
