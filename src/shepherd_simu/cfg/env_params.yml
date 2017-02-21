@@ -17,3 +17,6 @@ sailboat_sail:   0.1
 
 # Ping intervals in seconds
 ping_interval: 15
+
+# Buoy sensors accuracy
+buoy_depth_sensor_noise: 1  # meters
