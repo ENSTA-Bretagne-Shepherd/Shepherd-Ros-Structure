@@ -67,7 +67,7 @@ class BuoyPoseHolder(PoseHolder):
 # Constants
 # --------------------------------------------------------------------------------
 # Init entity numbers
-buoysNb = 1
+buoysNb = 2
 sailboatsNb = 4
 
 def update_disp(msg, name):
@@ -176,15 +176,20 @@ while not rospy.is_shutdown() and not closed:
         minY = min(minY, sb.pose.y)
 
     for bKey in buoys:
-        # print('[INFO] buoy : {}'.format(bKey))
+        print('[INFO] buoy name : {}'.format(bKey))
         # print('[INFO] buoy obj : {}'.format(buoys[bKey]))
         # print('[INFO] buoy pose.pose : {}'.format(buoys[bKey].pose))
         # print('[INFO] buoy x coord : {}'.format(buoys[bKey].pose.x))
         # print('[INFO] buoy y coord : {}'.format(buoys[bKey].pose.y))
         # print('[INFO] buoy y coord : {}'.format(buoys[bKey].pose.z))
 
-        plt.plot(buoys[bKey].pose.x, buoys[bKey].pose.y, 'ko')
-        buoy_shape = seaplt.draw_buoy_xy(buoys[bKey].pose.x, buoys[bKey].pose.y, buoys[bKey].pose.z, 5)
+        x = buoys[bKey].pose.x
+        y = buoys[bKey].pose.y
+        z = buoys[bKey].pose.z
+        zmax = 50
+
+        plt.plot(x, y, 'ko')
+        buoy_shape = seaplt.draw_buoy_xy(x, y, z, zmax)
         plt.gcf().gca().add_artist(buoy_shape)
 
     plt.quiver(minX+10, minY+10, wind_strength*np.cos(wind_dir), wind_strength*np.sin(wind_dir))
