@@ -173,7 +173,7 @@ void Buoy::vortex(void)
     delta = mvol/rho_w;
     Xdot2[0] = delta * Dx - mu * (Xdot[0] - vx);
     Xdot2[1] = Dy - mu * (Xdot[1] - vy);
-    Xdot2[2] = (m-(vol-volBal)*rho_w)*9.81-mu*Xdot[2];
+    Xdot2[2] = (m - (vol - volBal) * rho_w) * 9.81 - mu * Xdot[2];
     printf("Buoy  mass : %f : vol : %f, volbal : %f, accel : %f \n",m,vol,volBal,Xdot2[2]);
 
 }
@@ -210,7 +210,7 @@ void Buoy::clock(void)  // The model is described in "L. Jaulin Modélisation et
     //TODO : mettre un min et un max
     volBal = volBal+u*S*dt;
     if(volBal<0){volBal = 0;}
-    else if(volBal>vol){volBal = vol;}
+    else if(volBal>50){volBal = 50;}
     printf("Buoy State %d : x : %f, y : %f, z : %f \n",n,x,y,z);
     fflush(stdout);
 }
