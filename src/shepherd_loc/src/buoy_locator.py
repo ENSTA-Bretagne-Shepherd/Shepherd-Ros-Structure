@@ -2,6 +2,7 @@
 
 import rospy
 from shepherd_msg.msg import BuoyPoseInterval, DepthInterval, PingVector
+from std_msgs.msg import Float64
 from IA_localisation.helpers import SailboatPoseHolderStamped, interval2ros
 from IA_localisation.tdoa import localization
 
@@ -40,8 +41,11 @@ def locate_buoy(msg):
 
 
 def udpate_depth(msg):
-    global depth
-    depth = msg.depth
+    global depth, depth_sensor_noise
+    depth_est = DepthInterval()
+    depth_est.depth.lb= msg.data-depth_sensor_noise
+    depth_est.depth.ub = msg.data+depth_sensor_noise
+    depth = depth_est.depth
 
 
 # --------------------------------------------------------------------------------
@@ -62,6 +66,19 @@ sailboats = {'sailboat1': SailboatPoseHolderStamped(),
 # Depth interval received by the simulation
 depth = DepthInterval().depth
 
+# --------------------------------------------------------------------------------
+# Retrieve data about the depth noise sensor
+# --------------------------------------------------------------------------------
+
+depth_sensor_noise = 0.2
+if rospy.has_param('buoy_depth_sensor_noise'):
+    depth_sensor_noise = rospy.get_param('buoy_depth_sensor_noise')
+    rospy.loginfo('Depth Precision was set to %f', depth_sensor_noise)
+else:
+    msg = 'Depth Precision was not set in param server, defaulting to: {} meters'
+    msg = msg.format(depth_sensor_noise)
+    rospy.loginfo(msg)
+
 
 # --------------------------------------------------------------------------------
 # Subscriber to the ping topic
@@ -71,7 +88,7 @@ ping_sub = rospy.Subscriber('ping', PingVector, locate_buoy)
 # --------------------------------------------------------------------------------
 # Subscriber to the depth sensor topic
 # --------------------------------------------------------------------------------
-depth_sub = rospy.Subscriber('depth', DepthInterval, udpate_depth)
+depth_sub = rospy.Subscriber('depth_noisy', Float64, udpate_depth)
 
 # --------------------------------------------------------------------------------
 # Publisher of the buoy position
