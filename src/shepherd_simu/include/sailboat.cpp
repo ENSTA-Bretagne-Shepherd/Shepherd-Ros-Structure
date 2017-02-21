@@ -46,7 +46,7 @@ void Sailboat::clock(double deltag,double deltavmax)  // The model is described 
     v     += (1/m)*(sin(deltav)*fv-sin(deltag)*fg-alphaf*v*v)*dt;
     phiPoint += (-phiPoint+fv*hv*cos(deltav)*cos(phi)/Jx - 10000*9.81*sin(phi)/Jx)*dt ;
     phi += phiPoint * dt;
-    printf("Sailboat State : x : %f, y : %f, v : %f, theta : %f, omega : %f \n",x,y,v,theta,omega);
+    // printf("Sailboat State : x : %f, y : %f, v : %f, theta : %f, omega : %f \n",x,y,v,theta,omega);
 }
 
 void Sailboat::setWindAccel(double a) {

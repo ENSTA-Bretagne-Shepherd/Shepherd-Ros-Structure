@@ -158,8 +158,8 @@ while not rospy.is_shutdown() and not closed:
         triangleIn = draw_triangle(sb.cx, sb.cy, 50-10*1.5)
         triangle = draw_triangle(sb.cx, sb.cy, 50)
         triangleOut = draw_triangle(sb.cx, sb.cy, 50+10*1.5)
-        if sb.cx == 0 and sb.cy == 0:
-            print "ZEEEERROOOOOO : " + k
+        # if sb.cx == 0 and sb.cy == 0:
+        #     print "ZEEEERROOOOOO : " + k
 
         plt.plot(triangle[0], triangle[1], 'b', linewidth=1)
         plt.plot(triangleIn[0], triangleIn[1], 'r-', linewidth=1)

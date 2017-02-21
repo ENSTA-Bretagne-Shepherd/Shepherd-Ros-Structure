@@ -1,0 +1,9 @@
+<!-- Simulation d'un voilier avec un environnement qui publie les conditions-->
+<launch>
+	<rosparam command="load" file="$(find shepherd_simu)/cfg/env_params.yml" />
+
+    <node name="simulation_environnement" pkg="shepherd_simu" type="sim_world"/>
+
+    <include file="$(find shepherd_simu)/launch/sailboat.launch" ns="sailboat"/>
+
+</launch>
