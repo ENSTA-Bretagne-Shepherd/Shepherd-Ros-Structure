@@ -87,7 +87,8 @@ public:
     double t  = ros::Time::now().toSec();
     double dt = t-lastTime;
     lastTime  = t;
-    if(x == NULL)
+    //if(x == NULL)
+    if(x == 0)
     {
       x  = msg->x;
       y  = msg->y;

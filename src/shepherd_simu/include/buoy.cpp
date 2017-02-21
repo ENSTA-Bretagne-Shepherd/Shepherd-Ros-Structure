@@ -1,6 +1,7 @@
 #include <sailboat.h>
 #include "buoy.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 Buoy::Buoy(int nb, double xb, double yb, double zb, double ub, double dt)
 {
@@ -29,9 +30,9 @@ Buoy::Buoy(int nb, double xb, double yb, double zb, double ub, double dt)
     S = 1;
 
     // Caracteristiques physiques
-    m = 10.25;
-    vol = 10;
-    rho_w=10.025;
+    m = 100;
+    vol = 100;
+    rho_w=1.025;
     mvol = m/(vol-volBal); //kg/m³
 
     // Lorentz variables
@@ -43,8 +44,24 @@ Buoy::Buoy(int nb, double xb, double yb, double zb, double ub, double dt)
     mu = 1.0; //coefficient de resistance de Stokes
     theta = 10;
 
-    phi_i = 50.0;
-    Ri = 50.0;
+    phi_i = 1.0;
+    Ri = 100.0;
+
+    int i =0;
+    //TODO : tourne a linfini
+    /*
+    while (Xi[i]=!NULL)
+    {
+        double r = rand() % 200;
+        double ang = rand() % 200;
+        printf("rayon : %f angle : %f\n", r, ang);
+        Xi[i] = r*cos(314*ang);
+        Yi[i] = r*sin(314*ang);
+        i++;
+        printf("valeur de i :%i\n", i);
+    }
+    */
+   printf("appel dans le constructeur :%f\n", Xi[0]);
     Xi[0] = 100;
     Xi[1] = 100;
     Xi[2] = -100;
@@ -156,8 +173,8 @@ void Buoy::vortex(void)
     delta = mvol/rho_w;
     Xdot2[0] = delta * Dx - mu * (Xdot[0] - vx);
     Xdot2[1] = Dy - mu * (Xdot[1] - vy);
-    Xdot2[2] = (m-(vol-volBal)*rho_w)*9.81;
-    printf("\nBuoy  mass : %f : vol : %f, volbal : %f, accel : %f \n\n",m,vol,volBal,Xdot2[2]);
+    Xdot2[2] = (m-(vol-volBal)*rho_w)*9.81-mu*Xdot[2];
+    printf("Buoy  mass : %f : vol : %f, volbal : %f, accel : %f \n",m,vol,volBal,Xdot2[2]);
 
 }
 
@@ -185,12 +202,15 @@ void Buoy::clock(void)  // The model is described in "L. Jaulin Modélisation et
     x = x+dt*Xdot[0];
     y = y+dt*Xdot[1];
     z = z+dt*Xdot[2];
+    if (z<0)
+    {
+        z = 0;
+        Xdot[2] = 0;
+    }
     //TODO : mettre un min et un max
     volBal = volBal+u*S*dt;
-    if(volBal<1){volBal = 1;}
-    else if(volBal>vol-1){volBal = vol-1;}
-
-    printf("\n\nok\n \n");
+    if(volBal<0){volBal = 0;}
+    else if(volBal>vol){volBal = vol;}
     printf("Buoy State %d : x : %f, y : %f, z : %f \n",n,x,y,z);
     fflush(stdout);
 }

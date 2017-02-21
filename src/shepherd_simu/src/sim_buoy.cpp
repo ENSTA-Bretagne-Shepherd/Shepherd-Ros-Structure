@@ -42,7 +42,6 @@ int main(int argc, char **argv){
   buoy = Buoy(10,42,31,45,0,accelRate*dt);
 
 
-
   // Main loop
   while (n.ok()) {
 
