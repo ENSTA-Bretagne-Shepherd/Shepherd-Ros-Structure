@@ -33,10 +33,10 @@ class Buoy
         double mu;//!coefficient de resistance de Stokes
         double theta;
 
-        double phi_i;//!coefficient gerant la puissance d'aspiration du tourbillon
-        double Ri;//!coefficient obscur
+        double Ri[4];//!coefficient obscur
         double Xi[4];//!abscisse des tourbillons
         double Yi[4];//!ordonnees des tourbillons
+        double phi_i[4];//!coefficient gerant la puissance d'aspiration du tourbillon
         
         double vx;//!composante du vecteur vitesse d'une particule dans un courant selon la direction x
         double vy;//!composante du vecteur vitesse d'une particule dans un courant selon la direction x
