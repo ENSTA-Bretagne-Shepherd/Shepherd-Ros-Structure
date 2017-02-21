@@ -79,7 +79,7 @@ def update_disp(msg, name):
         sailboats[name].add_new_pose(msg.pose)
     else:
         # NOTE: verifier format msg
-        print('[INFO] Adding new buoy pose : {}'.format(name))
+        # print('[INFO] Adding new buoy pose : {}'.format(name))
         buoys[name].add_new_pose(msg)
 
 
@@ -116,7 +116,7 @@ buoys = dict()
 for i in range(buoysNb):
     buoys['buoy{}'.format(i)] = BuoyPoseHolder(Point)
     rospy.Subscriber('buoy{}/pose_real'.format(i), Point,update_disp, callback_args='buoy{}'.format(i))
-    print('[INFO] Suscribed to {}'.format('buoy{}/pose_real'.format(i)))
+    # print('[INFO] Suscribed to {}'.format('buoy{}/pose_real'.format(i)))
 
 rospy.Subscriber('world/env', WorldInfo, update_wind)
 
@@ -176,19 +176,15 @@ while not rospy.is_shutdown() and not closed:
         minY = min(minY, sb.pose.y)
 
     for bKey in buoys:
-        print('[INFO] buoy : {}'.format(bKey))
-        print('[INFO] buoy obj : {}'.format(buoys[bKey]))
-        print('[INFO] buoy pose.pose : {}'.format(buoys[bKey].pose))
-        print('[INFO] buoy x coord : {}'.format(buoys[bKey].pose.x))
-        print('[INFO] buoy y coord : {}'.format(buoys[bKey].pose.y))
-        print('[INFO] buoy y coord : {}'.format(buoys[bKey].pose.z))
-
-        # tmp = int(buoys[bKey].pose.z)
-        tmp = buoys[bKey].pose.x
-        print tmp
+        # print('[INFO] buoy : {}'.format(bKey))
+        # print('[INFO] buoy obj : {}'.format(buoys[bKey]))
+        # print('[INFO] buoy pose.pose : {}'.format(buoys[bKey].pose))
+        # print('[INFO] buoy x coord : {}'.format(buoys[bKey].pose.x))
+        # print('[INFO] buoy y coord : {}'.format(buoys[bKey].pose.y))
+        # print('[INFO] buoy y coord : {}'.format(buoys[bKey].pose.z))
 
         plt.plot(buoys[bKey].pose.x, buoys[bKey].pose.y, 'ko')
-        buoy_shape = seaplt.draw_buoy_xy(buoys[bKey].pose.x, buoys[bKey].pose.y, buoys[bKey].pose.z, 50)
+        buoy_shape = seaplt.draw_buoy_xy(buoys[bKey].pose.x, buoys[bKey].pose.y, buoys[bKey].pose.z, 5)
         plt.gcf().gca().add_artist(buoy_shape)
 
     plt.quiver(minX+10, minY+10, wind_strength*np.cos(wind_dir), wind_strength*np.sin(wind_dir))
