@@ -28,17 +28,16 @@ class PoseHolder(object):
         self.histX.append(x)
         self.histY.append(y)
         self.histT.append(theta)
-        if len(self.histX) > SailboatPoseHolder.MAX_HIST_SIZE:
+        if len(self.histX) > PoseHolder.MAX_HIST_SIZE:
             del(self.histX[0])
-        if len(self.histY) > SailboatPoseHolder.MAX_HIST_SIZE:
+        if len(self.histY) > PoseHolder.MAX_HIST_SIZE:
             del(self.histY[0])
-        if len(self.histT) > SailboatPoseHolder.MAX_HIST_SIZE:
+        if len(self.histT) > PoseHolder.MAX_HIST_SIZE:
             del(self.histT[0])
 
 
 class SailboatPoseHolder(PoseHolder):
     """docstring for SailboatPoseHolder"""
-    MAX_HIST_SIZE = 500
 
     def __init__(self, pose):
         super(SailboatPoseHolder, self).__init__(pose)
@@ -70,6 +69,7 @@ class BuoyPoseHolder(PoseHolder):
 buoysNb = 2
 sailboatsNb = 4
 
+
 def update_disp(msg, name):
     global sailboats, buoys
     # print 'Updating', sailboat_name
@@ -80,6 +80,7 @@ def update_disp(msg, name):
     else:
         # NOTE: verifier format msg
         # print('[INFO] Adding new buoy pose : {}'.format(name))
+        # print 'received buoy pose: {}, {}, {}, {}'.format(name, msg.x, msg.y, msg.z)
         buoys[name].add_new_pose(msg)
 
 
@@ -114,7 +115,7 @@ rospy.init_node('display_simple')
 # NOTE: verifier si Point est le bon message
 buoys = dict()
 for i in range(buoysNb):
-    buoys['buoy{}'.format(i)] = BuoyPoseHolder(Point)
+    buoys['buoy{}'.format(i)] = BuoyPoseHolder(Point())
     rospy.Subscriber('buoy{}/pose_real'.format(i), Point,update_disp, callback_args='buoy{}'.format(i))
     # print('[INFO] Suscribed to {}'.format('buoy{}/pose_real'.format(i)))
 
@@ -186,8 +187,9 @@ while not rospy.is_shutdown() and not closed:
         x = buoys[bKey].pose.x
         y = buoys[bKey].pose.y
         z = buoys[bKey].pose.z
-        zmax = 50
+        zmax = 1000
 
+        print 'plotting buoy at: {}, {}, {}'.format(x, y, z)
         plt.plot(x, y, 'ko')
         buoy_shape = seaplt.draw_buoy_xy(x, y, z, zmax)
         plt.gcf().gca().add_artist(buoy_shape)
