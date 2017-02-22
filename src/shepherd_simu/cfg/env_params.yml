@@ -16,7 +16,7 @@ sailboat_rudder: 0.1
 sailboat_sail:   0.1
 
 # Ping intervals in seconds
-ping_interval: 15
+ping_interval: 5
 
 # Buoy sensors accuracy
 buoy_depth_sensor_noise: 1  # meters
