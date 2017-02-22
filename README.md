@@ -2,15 +2,48 @@
 
 __Version ROS__: Indigo
 
-## Demo
-
-Pour afficher un premier exemple de demonstration (simulation voilier uniquement):
+## Utilisation
 
 ```bash
+$ git clone https://github.com/ENSTA-Bretagne-Shepherd/Shepherd-Ros-Structure.git
 $ catkin_make
 $ source devel/setup.bash
-$ roslaunch shepherd_simu demo1.launch
 ```
+
+Et pour l'execution de la simulation (4 voiliers + 1 bouee + display_matplotlib):
+```bash
+$ roslaunch shepherd_simu shepherd.launch
+```
+
+
+## Avance
+
+### Simulation d'un seul voilier:
+
+Il est possible de faire simuler un voilier (seul) pour qu'il suive un triangle:
+
+```bash
+$ roslaunch shepherd_simu demo.launch
+```
+
+
+### Simulation de 4 voiliers:
+
+Cette commande fait simuler 4 voiliers qui suivent 4 triangles. (*vous pouvez lancer RQT pour definir le centre des triangles*)
+
+```bash
+$ roslaunch shepherd_simu demo_all.launch
+```
+
+### Simulation d'une bouee seule (derive)
+
+Il est possible de simuler une bouee seule. Cependant, etant donne qu'elle ne peut pas se localiser, elle ne fera que deriver et couler.
+
+```bash
+$ roslaunch shepherd_simu buoy.launch
+```
+
+### RQT
 
 Pour visionner les noeuds et changer les constantes d'environnement (vent, centres des triangles).
 Dans un __nouveau terminal__:
@@ -25,13 +58,6 @@ $ rqt --perspective-file preferences/rqt/Observation.perspective
 ### Structure des noeuds
 
 L'architecture des noeuds de ce repository est disponible [ici](https://github.com/ENSTA-Bretagne-Shepherd/Shepherd-Ros-Structure/blob/master/structure.pdf)
-
-### Utilisation
-
-```bash
-catkin_make
-source devel/setup.bash
-```
   	
 ### Comment contribuer
 
