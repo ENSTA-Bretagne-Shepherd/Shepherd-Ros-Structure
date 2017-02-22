@@ -10,6 +10,6 @@ src/cmake-build-debug
 *.sublime-project
 *.sublime-workspace
 *.pyc
+*~
 
 *.lprof
-

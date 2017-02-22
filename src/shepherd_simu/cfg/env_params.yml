@@ -14,3 +14,9 @@ sailboat_imu_noise: 0.1   # degrees
 # Actuator error (# the difference between the command and what is really applied)
 sailboat_rudder: 0.1
 sailboat_sail:   0.1
+
+# Ping intervals in seconds
+ping_interval: 5
+
+# Buoy sensors accuracy
+buoy_depth_sensor_noise: 1  # meters
