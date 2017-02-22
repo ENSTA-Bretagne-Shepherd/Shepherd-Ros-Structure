@@ -87,10 +87,10 @@ for topic in buoy_poses.iterkeys():
 c_sound = 1500
 
 # Period
-ping_period = 10
-if rospy.has_param('ping_period'):
-    ping_period = rospy.get_param('ping_period')
-    rospy.loginfo('Ping period was set to %f', ping_period)
+ping_period = 2
+if rospy.has_param('ping_interval'):
+    ping_period = rospy.get_param('ping_interval')
+    rospy.loginfo('Ping interval was set to %f', ping_period)
 else:
     msg = 'Ping was not set in param server, defaulting to: {} seconds'
     msg = msg.format(ping_period)
@@ -125,12 +125,15 @@ def send_pings():
             # we suppose that sailboats are at 0 depth
             dz = b_pose.z
             d = sqrt(dx**2 + dy**2 + dz**2)
-            print '{} is at {} m from {}'.format(b_name, d, name)
+            # print '{} is at {} m from {}'.format(b_name, d, name)
             ping = generatePing(name, pose, rospy.Time.now(), d)
             pings_for_buoy.pings.append(ping)
         buoy_pubs[b_topic].publish(pings_for_buoy)
-        print '-'
-    print '----'
+        msg ='pose bouee: {}, {}, {}'.format(b_pose.x, b_pose.y, b_pose.z)
+        rospy.logwarn(msg)
+        rospy.logdebug('-')
+    rospy.logdebug('----')
+    rospy.logwarn('ping sent')
 
 
 while not rospy.is_shutdown():
