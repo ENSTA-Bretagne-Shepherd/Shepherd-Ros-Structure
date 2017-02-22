@@ -12,9 +12,9 @@ class BuoySimpleController
 {
 public:
   BuoySimpleController(){
-    pose_sub = node.subscribe("buoy/pose_est", 1, &BuoySimpleController::updatePose, this);
+    pose_sub = node.subscribe("pose_est", 1, &BuoySimpleController::updatePose, this);
 
-    cmd_pub = node.advertise<std_msgs::Float64>("buoy/cmd", 1);
+    cmd_pub = node.advertise<std_msgs::Float64>("cmd", 1);
     u.data = 1;
   }
 
@@ -22,7 +22,7 @@ public:
     x = msg->x;
     y = msg->y;
     z = msg->z;
-    ROS_INFO("I received an estimated position: ([%f], [%f], [%f])", x, y, z);
+    ROS_DEBUG("I received an estimated position: ([%f], [%f], [%f])", x, y, z);
   }
 
   void updateCommand(){
