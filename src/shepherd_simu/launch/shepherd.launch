@@ -1,0 +1,28 @@
+<!-- Simulation du projet Shepherd-->
+<!--                              -->
+<!-- Cette simulation simule les 4 voiliers et 1 bouee -->
+<launch>
+
+    <rosparam command="load" file="$(find shepherd_simu)/cfg/env_params.yml"/>
+
+    <node name="sim_world" pkg="shepherd_simu" type="sim_world"/>
+
+    <!-- Les 4 voiliers -->
+
+    <include file="$(find shepherd_simu)/launch/sailboat-no-display.launch" ns="sailboat1"/>
+
+    <include file="$(find shepherd_simu)/launch/sailboat-no-display.launch" ns="sailboat2"/>
+
+    <include file="$(find shepherd_simu)/launch/sailboat-no-display.launch" ns="sailboat3"/>
+
+    <include file="$(find shepherd_simu)/launch/sailboat-no-display.launch" ns="sailboat4"/>
+
+    <!-- La bouee -->
+
+    <include file="$(find shepherd_simu)/launch/buoy_bloc.launch" ns="buoy1"/>
+
+    <!-- Pinger (doit etre lance apres tous les autres-->
+
+    <node name="pinger" pkg="shepherd_simu" type="pinger.py" output="screen"/>
+
+</launch>
