@@ -25,4 +25,8 @@
 
     <node name="pinger" pkg="shepherd_simu" type="pinger.py" output="screen"/>
 
+    <!-- Display -->
+
+    <node name="display_matplotlib" pkg="shepherd_disp" type="pyplot_disp_all.py"/>
+
 </launch>
