@@ -40,13 +40,8 @@ double fRand(double fMin, double fMax) {
 
 int main(int argc, char **argv) {
 
-    ros::NodeHandle n = initNode(argc, argv, "sim_buoy");
-    printf("petit test izi\n");
+    ros::NodeHandle n = initNode(argc,argv,"sim_buoy");
     ros::Rate r(100);
-    printf("petit test izi 1\n");
-
-    //publisher
-    printf("petit test izi 2\n");
 
     double dt = r.expectedCycleTime().sec + r.expectedCycleTime().nsec / 1000000000.0;
     printf("dt = %f\n", dt);

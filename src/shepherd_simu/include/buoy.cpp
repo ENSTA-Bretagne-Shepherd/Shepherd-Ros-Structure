@@ -30,7 +30,7 @@ Buoy::Buoy(int nb, double xb, double yb, double zb, double ub, double dt)
     S = 1;
 
     // Caracteristiques physiques
-    m = 100;
+    m = 102;
     vol = 100;
     rho_w=1.025;
     mvol = m/(vol-volBal); //kg/m³
@@ -44,8 +44,6 @@ Buoy::Buoy(int nb, double xb, double yb, double zb, double ub, double dt)
     mu = 1.0; //coefficient de resistance de Stokes
     theta = 10;
 
-    phi_i = 1.0;
-    Ri = 100.0;
 
     int i =0;
     //TODO : tourne a linfini
@@ -61,16 +59,10 @@ Buoy::Buoy(int nb, double xb, double yb, double zb, double ub, double dt)
         printf("valeur de i :%i\n", i);
     }
     */
-   printf("appel dans le constructeur :%f\n", Xi[0]);
-    Xi[0] = 100;
-    Xi[1] = 100;
-    Xi[2] = -100;
-    Xi[3] = -100;
-
-    Yi[0] = 100;
-    Yi[1] = -100;
-    Yi[2] = -100;
-    Yi[3] = 100;
+    Xi[0]=100;Xi[1]=100;Xi[2]=-100;Xi[3]=-100;
+    Yi[0]=100;Yi[1]=-100;Yi[2]=-100;Yi[3]=100;
+    phi_i[0]=5;phi_i[1]=-5;phi_i[2]=5;phi_i[3]=-5;
+    Ri[0]=100;Ri[1]=100;Ri[2]=100;Ri[3]=100;
 
 }
 
@@ -136,6 +128,7 @@ void Buoy::eqParticuleSimple(void)
     Dy = 4*sin(y)*cos(x);
 }
 
+/*
 void Buoy::eqParticule(void)
 {
     double d2;
@@ -163,6 +156,43 @@ void Buoy::eqParticule(void)
     Dx = vx*dvxx+vy*dvxy;
     Dy = vx*dvyx+vy*dvyy;
 }
+*/
+
+
+void Buoy::eqParticule(void)
+{
+    //vx = -2*sin(y);
+    //vy = 2*sin(x);
+    
+    double d2;
+    double dvxx, dvyx, dvxy, dvyy;
+    double u,v;
+    vx = 0;
+    vy = 0;
+    dvxx = 0;
+    dvyx = 0;
+    dvxy = 0;
+    dvyy = 0;
+
+    for (int i=0;i<4;i++)
+    {
+        d2 = (x-Xi[i])*(x-Xi[i])+(y-Yi[i])*(y-Yi[i]);
+        u = phi_i[i]*2*y*(y-Yi[i])*exp(-1*d2/(Ri[i]*Ri[i]))/(Ri[i]*Ri[i]);
+        v =-phi_i[i]*2*x*(x-Xi[i])*exp(-1*d2/(Ri[i]*Ri[i]))/(Ri[i]*Ri[i]);
+        vx += u;
+        vy += v;
+
+        dvxx += -2*(x-Xi[i])/(Ri[i]*Ri[i])*u;
+        dvxy += -2*(y-Yi[i])/(Ri[i]*Ri[i])*u + phi_i[i]*2*(2*y-Yi[i])*exp(-1*d2/(Ri[i]*Ri[i]))/(Ri[i]*Ri[i]);
+        dvyy += -2*(y-Yi[i])/(Ri[i]*Ri[i])*v;
+        dvxy += -2*(x-Xi[i])/(Ri[i]*Ri[i])*v - phi_i[i]*2*(2*x-Xi[i])*exp(-1*d2/(Ri[i]*Ri[i]))/(Ri[i]*Ri[i]);
+    }
+
+    Dx = vx*dvxx+vy*dvxy;
+    Dy = vx*dvyx+vy*dvyy;
+}
+
+
 
 void Buoy::vortex(void)
 {
