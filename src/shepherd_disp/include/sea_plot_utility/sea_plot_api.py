@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.plt as plt
+import matplotlib.pyplot as plt
 
 # Sailboat drawing
 HULL = np.array([[-1,  5,  7, 7, 5, -1, -1, -1],
@@ -16,11 +16,12 @@ def draw_sailboat(x, y, theta):
     return hullr
 
 def draw_buoy_xy(xb,yb,zb,zmax):
-    shape_buoy = plt.Circle((xb,yb),4,color=str(zb/zmax))
+    print 'Gray color : ', zb/zmax
+    shape_buoy = plt.Circle((xb,yb),5,color=str(zb/zmax),fill=True)
     return shape_buoy
 
 def draw_buoy_xz(xb,yb,zb,ymax):
-    shape_buoy = plt.Circle((xb,zb),4,color=str(yb/ymax))
+    shape_buoy = plt.Circle((xb,zb),1,color=str(yb/ymax))
     return shape_buoy
 
 def draw_triangle(cx, cy, range):

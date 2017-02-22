@@ -10,16 +10,17 @@ import numpy as np
 def draw_triangle():
     global cx, cy
 
-    pt1x = cx + 50 * np.cos(1 * 2 * np.pi/3);
-    pt1y = cy + 50 * np.sin(1 * 2 * np.pi/3);
-    pt2x = cx + 50 * np.cos(2 * 2 * np.pi/3);
-    pt2y = cy + 50 * np.sin(2 * 2 * np.pi/3);
-    pt3x = cx + 50 * np.cos(3 * 2 * np.pi/3);
-    pt3y = cy + 50 * np.sin(3 * 2 * np.pi/3);
+    pt1x = cx + 50 * np.cos(1 * 2 * np.pi / 3)
+    pt1y = cy + 50 * np.sin(1 * 2 * np.pi / 3)
+    pt2x = cx + 50 * np.cos(2 * 2 * np.pi / 3)
+    pt2y = cy + 50 * np.sin(2 * 2 * np.pi / 3)
+    pt3x = cx + 50 * np.cos(3 * 2 * np.pi / 3)
+    pt3y = cy + 50 * np.sin(3 * 2 * np.pi / 3)
     triangle = np.array([[pt1x, pt2x, pt3x, pt1x],
                          [pt1y, pt2y, pt3y, pt1y],
                          [   1,    1,    1,    1]])
     return triangle
+
 
 def draw_sailboat():
     global x, y, theta
@@ -40,13 +41,16 @@ def update_disp(msg):
     global x, y, theta
     x, y, theta = msg.pose.x, msg.pose.y, msg.pose.theta
 
+
 def update_wind(msg):
     global wind_dir, wind_strength
     wind_dir, wind_strength = msg.wind_angle, msg.wind_strength
 
+
 def update_center(msg):
     global cx, cy
     cx, cy = msg.data[0], msg.data[1]
+
 
 def handle_close(event):
     global closed
@@ -77,9 +81,9 @@ def draw_buoy(xb=0,yb=0):
 rospy.init_node('display_simple')
 
 # Subscriber to the sailboat position
-rospy.Subscriber('sailboat/pose_real', SailboatPose, update_disp)
-rospy.Subscriber('world/env', WorldInfo, update_wind)
-rospy.Subscriber('sailboat/triangleCenter', Float64MultiArray, update_center)
+rospy.Subscriber('pose_real', SailboatPose, update_disp)
+rospy.Subscriber('/world/env', WorldInfo, update_wind)
+rospy.Subscriber('triangleCenter', Float64MultiArray, update_center)
 rospy.Subscriber('buoy/pose_real',Point,update_disp) # Subcriber to buoy
 
 # Data to display
@@ -109,7 +113,8 @@ while not rospy.is_shutdown() and not closed:
 
     hull = draw_sailboat()
     triangle = draw_triangle()
-    plt.quiver(x+10,y+10, wind_strength*np.cos(wind_dir), wind_strength*np.sin(wind_dir))
+    plt.quiver(x + 10, y + 10, wind_strength * np.cos(wind_dir),
+               wind_strength * np.sin(wind_dir))
     plt.plot(triangle[0], triangle[1], 'b', linewidth=1)
     plt.plot(hull[0], hull[1], 'k', linewidth=2)
 

@@ -5,6 +5,7 @@
 #include "shepherd_msg/WorldInfo.h"
 #include "sim_voilier.h"
 #include "sailboat.h"
+#include <stdlib.h>
 
 // ======================== NODE INIT ===========================
 
@@ -30,11 +31,13 @@ ros::NodeHandle initNode(int argc, char **argv, std::string name){
     // You can populate the node with features by looking at http://wiki.ros.org/ROSNodeTutorialC%2B%2B
 
     // Create a publisher and name the topic.
-    pubSailboatPose = n.advertise<shepherd_msg::SailboatPose>("sailboat/pose_real", 100);
+    pubSailboatPose = n.advertise<shepherd_msg::SailboatPose>("pose_real", 100);
+    // Create a publisher and name the topic.
+    pubSailboatPoseNoisy = n.advertise<shepherd_msg::SailboatPose>("pose_noisy", 100);
 
     // Create suscribers
-    subCmd = n.subscribe("sailboat/cmd", 1000, &cmdCallback);
-    subEnv = n.subscribe("world/env", 10, &envCallback);
+    subCmd = n.subscribe("cmd", 1000, &cmdCallback);
+    subEnv = n.subscribe("/world/env", 10, &envCallback);
 
     return n;
 }
@@ -45,7 +48,7 @@ void cmdCallback(const shepherd_msg::SailboatCmd::ConstPtr& msg)
 {
     sailboatCmd.rudder_angle = msg->rudder_angle;
     sailboatCmd.sail_angle = msg->sail_angle;
-    ROS_INFO("Boat commands : [%f] [%f]", msg->rudder_angle, msg->sail_angle);
+    // ROS_INFO("Boat commands : [%f] [%f]", msg->rudder_angle, msg->sail_angle);
 }
 void envCallback(const shepherd_msg::WorldInfo::ConstPtr& msg)
 {
@@ -54,6 +57,15 @@ void envCallback(const shepherd_msg::WorldInfo::ConstPtr& msg)
     boat.setWindAccel(msg->wind_strength);
     boat.setWindDir(msg->wind_angle);
     ROS_INFO("World parameters : [%f] [%f]", msg->wind_angle, msg->wind_strength);
+}
+
+double rand01(){
+    return ((double) rand() / (RAND_MAX));
+}
+
+double fRand(double fMin, double fMax){
+    double r = rand01();
+    return fMin + rand01() * (fMax - fMin);
 }
 
 int main(int argc, char **argv)
@@ -65,8 +77,22 @@ int main(int argc, char **argv)
     double dt = r.expectedCycleTime().sec+r.expectedCycleTime().nsec/1000000000.0;
     printf("dt = %f\n",dt);
 
-    double accelRate = 1; // Pour accélérer la simulation (le bateau sera donc aussi commandé plus lentement)
+    double accelRate; // Pour accélérer la simulation (le bateau sera donc aussi commandé plus lentement)
+    ros::param::param<double>("sim_speed", accelRate, 1);
+    ROS_INFO("Sim speed factor : [%f]", accelRate);
+
     boat  = Sailboat(0,0,dt*accelRate);
+
+    // Get parameters of the simulation
+    double pose_noise;
+    ros::param::param<double>("sailboat_gps_noise", pose_noise, 0.1);
+    ROS_INFO("Pose noise : [%f]", pose_noise);
+
+
+    double heading_noise;
+    ros::param::param<double>("sailboat_imu_noise", heading_noise, 0.1);
+    ROS_INFO("Heading noise : [%f]", heading_noise);
+
 
     // Main loop.
     while (n.ok())
@@ -80,6 +106,16 @@ int main(int argc, char **argv)
 
         // Publish the message.
         pubSailboatPose.publish(sailboatPose);
+
+        // Publish a noisy pose
+        sailboatPoseNoisy.pose.theta = fRand(boat.theta-heading_noise, boat.theta+heading_noise);
+        sailboatPoseNoisy.pose.x = fRand(boat.x-pose_noise, boat.x+pose_noise);
+        sailboatPoseNoisy.pose.y = fRand(boat.y-pose_noise, boat.y+pose_noise);
+
+        // Publish the message.
+        pubSailboatPoseNoisy.publish(sailboatPoseNoisy);
+
+
 
         // Loop
         ros::spinOnce();

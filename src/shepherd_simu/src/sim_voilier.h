@@ -15,10 +15,12 @@ Sailboat boat(0,0,0);
 // Publishers and subscribers
 /**
  * PUBLISHER
- * Position du bateau
+ * Position du bateau (reel et bruite)
  */
 ros::Publisher pubSailboatPose;
+ros::Publisher pubSailboatPoseNoisy;
 shepherd_msg::SailboatPose sailboatPose;
+shepherd_msg::SailboatPose sailboatPoseNoisy;
 
 /**
  * SUBSCRIBER

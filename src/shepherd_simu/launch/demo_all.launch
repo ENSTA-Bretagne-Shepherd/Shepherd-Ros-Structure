@@ -1,0 +1,30 @@
+<!-- Ce fichier de launch lance les noeuds pour
+	- regulation_voilier (qui s'abonne a la position reelle (pas capteur))
+	- simulation_voilier avec le script python
+	POUR CHAQUE VOILIER (=4) et le noeud d'affichage
+	- pyplot_disp_all avec matplotlib -->
+<launch>
+	
+	<rosparam command="load" file="$(find shepherd_simu)/cfg/env_params.yml" />
+
+    <node name="simulation_environnement" pkg="shepherd_simu" type="sim_world"/>
+
+    <!-- 4 sailboats -->
+
+    <include file="$(find shepherd_simu)/launch/sailboat-no-display.launch" ns="sailboat1"/>
+
+    <include file="$(find shepherd_simu)/launch/sailboat-no-display.launch" ns="sailboat2"/>
+
+    <include file="$(find shepherd_simu)/launch/sailboat-no-display.launch" ns="sailboat3"/>
+
+    <include file="$(find shepherd_simu)/launch/sailboat-no-display.launch" ns="sailboat4"/>
+
+    <!-- 1 buoys -->
+
+
+
+	<!-- DISPLAY -->
+
+	<node name="display_matplotlib" pkg="shepherd_disp" type="pyplot_disp_all.py"/>
+
+</launch>
