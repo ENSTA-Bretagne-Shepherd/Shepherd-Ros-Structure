@@ -19,12 +19,4 @@
 
     <include file="$(find shepherd_simu)/launch/sailboat-no-display.launch" ns="sailboat4"/>
 
-    <!-- 1 buoys -->
-
-
-
-	<!-- DISPLAY -->
-
-	<node name="display_matplotlib" pkg="shepherd_disp" type="pyplot_disp_all.py"/>
-
 </launch>

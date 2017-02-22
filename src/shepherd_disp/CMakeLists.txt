@@ -143,6 +143,8 @@ add_dependencies(unity_display_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin
 ## Specify libraries to link a library or executable target against
 target_link_libraries(unity_display_node ${catkin_LIBRARIES})
 
+catkin_python_setup()
+
 #############
 ## Install ##
 #############

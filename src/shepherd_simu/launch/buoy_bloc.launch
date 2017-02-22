@@ -1,0 +1,20 @@
+<!-- Simulation d'une bouee -->
+
+<!-- !!! NE PAS LANCER CE ROSLAUNCH, IL SERT JUSTE D'AIDE !!!
+
+EXPLICATION:
+Ce launch n'inclue pas le pinger qui sert a la localisation.
+Par consequent les bouees ne peuvent pas se reguler car la position estimee
+n'est pas publiee
+
+ -->
+
+ <launch>
+
+    <node name="sim_buoy" pkg="shepherd_simu" type="sim_buoy" output="screen"/>
+
+    <node name="reg_buoy" pkg="shepherd_reg" type="regulation_bouee"/>
+
+    <node name="loc_buoy" pkg="shepherd_loc" type="buoy_locator.py" output="screen"/>
+
+</launch>

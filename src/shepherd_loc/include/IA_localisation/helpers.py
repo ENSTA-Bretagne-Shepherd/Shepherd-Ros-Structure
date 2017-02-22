@@ -35,13 +35,13 @@ def distSep3D(x, y, z, r):
     return myC1
 
 
-def distSep3Dtdoa(x, y, z, Z, c, t0):
-    eq = "(X-[%f, %f])^2 + (Y-[%f, %f])^2 + ([%f, %f]-[%f, %f])^2 - %f*(t1-%f)"
+def distSep3Dtdoa(x, y, z, Z, c, dt, t0):
+    eq = "(X-[%f, %f])^2 + (Y-[%f, %f])^2 + ([%f, %f]-[%f, %f])^2 - (%f*(t1 + %f - %f))^2"
     myf1 = Function("X", "Y", "t1",
                     eq % (x.lb(), x.ub(),
                           y.lb(), y.ub(),
                           Z.lb(), Z.ub(),
-                          z.lb(), z.ub(), c, t0))
+                          z.lb(), z.ub(), c, dt, t0))
     myC1 = SepFwdBwd(myf1, Interval(0))
     return myC1
 
@@ -82,9 +82,11 @@ class SailboatPoseHolderStamped(object):
         self.arr = arr
         self.dt = arr - dep
 
+    def __repr__(self):
+        return '{}, {}, {}'.format(self.x, self.y, self.dt)
+
 
 def ros2interval(msg):
-    print '###', msg
     return Interval(msg.lb, msg.ub)
 
 

@@ -18,16 +18,16 @@ def draw_triangle():
     pt3y = cy + 50 * np.sin(3 * 2 * np.pi / 3)
     triangle = np.array([[pt1x, pt2x, pt3x, pt1x],
                          [pt1y, pt2y, pt3y, pt1y],
-                         [1, 1, 1, 1]])
+                         [   1,    1,    1,    1]])
     return triangle
 
 
 def draw_sailboat():
     global x, y, theta
     # Original
-    hull = np.array([[-1, 5, 7, 7, 5, -1, -1, -1],
-                     [-2, -2, -1, 1, 2, 2, -2, -2],
-                     [1, 1, 1, 1, 1, 1, 1, 1]])
+    hull = np.array([[-1,  5,  7, 7, 5, -1, -1, -1],
+                     [-2, -2, -1, 1, 2,  2, -2, -2],
+                     [ 1,  1,  1, 1, 1,  1,  1,  1]])
     # Rotation matrix
     R = np.array([[np.cos(theta), -np.sin(theta), x],
                   [np.sin(theta), np.cos(theta), y],
@@ -72,6 +72,11 @@ def update_trace():
         del(thetat[0])
 
 
+def draw_buoy(xb=0,yb=0):
+    angle = np.arange(0,3*np.pi,np.pi/10)
+    buoy = [xb+np.cos(buoy),yb+np.sin(buoy)]
+    return buoy
+
 # Initialize node
 rospy.init_node('display_simple')
 
@@ -79,6 +84,7 @@ rospy.init_node('display_simple')
 rospy.Subscriber('pose_real', SailboatPose, update_disp)
 rospy.Subscriber('/world/env', WorldInfo, update_wind)
 rospy.Subscriber('triangleCenter', Float64MultiArray, update_center)
+rospy.Subscriber('buoy/pose_real',Point,update_disp) # Subcriber to buoy
 
 # Data to display
 x, y, theta = 0, 0, 0

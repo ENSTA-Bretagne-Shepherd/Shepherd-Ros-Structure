@@ -1,0 +1,17 @@
+<!-- Simulation d'une bouee -->
+
+<!-- Ici on relie la position estimee a la position reelle pour
+que la regulation marche -->
+
+<launch>
+
+    <node name="sim_buoy" pkg="shepherd_simu" type="sim_buoy"/>
+
+    <node name="reg_buoy" pkg="shepherd_reg" type="regulation_bouee">
+        <remap from="pose_est" to="pose_real"/>
+    </node>
+
+
+    <!-- <node name="loc_buoy" pkg="shepherd_loc" type="buoy_locator.py"/> -->
+
+</launch>

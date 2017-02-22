@@ -3,8 +3,10 @@ import rospy
 from shepherd_msg.msg import SailboatPose
 from shepherd_msg.msg import WorldInfo
 from std_msgs.msg import Float64MultiArray
+from geometry_msgs.msg import Point
 import matplotlib.pyplot as plt
 import numpy as np
+import sea_plot_utility.sea_plot_api as seaplt
 
 
 # --------------------------------------------------------------------------------
@@ -12,74 +14,74 @@ import numpy as np
 # --------------------------------------------------------------------------------
 
 
-class SailboatPoseHolder(object):
+class PoseHolder(object):
     """docstring for SailboatPoseHolder"""
     MAX_HIST_SIZE = 500
 
     def __init__(self, pose):
-        super(SailboatPoseHolder, self).__init__()
         self.pose = pose
         self.histX = []
         self.histY = []
         self.histT = []
-        self.cx = 0
-        self.cy = 0
-
-    def add_new_pose(self, pose):
-        self.pose = pose
-        self.update_hist(pose.x, pose.y, pose.theta)
-
-    # def updateTriCenter(self, cx, cy):
-    #     self.cy = cy
-    #     self.cx = cx
 
     def update_hist(self, x, y, theta):
         self.histX.append(x)
         self.histY.append(y)
         self.histT.append(theta)
-        if len(self.histX) > SailboatPoseHolder.MAX_HIST_SIZE:
+        if len(self.histX) > PoseHolder.MAX_HIST_SIZE:
             del(self.histX[0])
-        if len(self.histY) > SailboatPoseHolder.MAX_HIST_SIZE:
+        if len(self.histY) > PoseHolder.MAX_HIST_SIZE:
             del(self.histY[0])
-        if len(self.histT) > SailboatPoseHolder.MAX_HIST_SIZE:
+        if len(self.histT) > PoseHolder.MAX_HIST_SIZE:
             del(self.histT[0])
+
+
+class SailboatPoseHolder(PoseHolder):
+    """docstring for SailboatPoseHolder"""
+
+    def __init__(self, pose):
+        super(SailboatPoseHolder, self).__init__(pose)
+        self.cx = 0
+        self.cy = 0
+
+    def updateTriCenter(self, cx, cy):
+        self.cy = cy
+        self.cx = cx
+
+    def add_new_pose(self, pose):
+        self.pose = pose
+        self.update_hist(pose.x, pose.y, pose.theta)
+
+
+class BuoyPoseHolder(PoseHolder):
+    def __init__(self, pose):
+        super(BuoyPoseHolder, self).__init__(pose)
+
+    def add_new_pose(self, point):
+        self.pose = point
+        self.update_hist(point.x, point.y, point.z)
 
 
 # --------------------------------------------------------------------------------
 # Constants
 # --------------------------------------------------------------------------------
-# Sailboat drawing
-HULL = np.array([[-1,  5,  7, 7, 5, -1, -1, -1],
-                 [-2, -2, -1, 1, 2,  2, -2, -2],
-                 [ 1,  1,  1, 1, 1,  1,  1,  1]])
-
-def draw_triangle(cx, cy, range):
-
-    pt1x = cx + range * np.cos(1 * 2 * np.pi/3);
-    pt1y = cy + range * np.sin(1 * 2 * np.pi/3);
-    pt2x = cx + range * np.cos(2 * 2 * np.pi/3);
-    pt2y = cy + range * np.sin(2 * 2 * np.pi/3);
-    pt3x = cx + range * np.cos(3 * 2 * np.pi/3);
-    pt3y = cy + range * np.sin(3 * 2 * np.pi/3);
-    triangle = np.array([[pt1x, pt2x, pt3x, pt1x],
-                         [pt1y, pt2y, pt3y, pt1y],
-                         [   1,    1,    1,    1]])
-    return triangle
-
-def draw_sailboat(x, y, theta):
-    # Rotation matrix
-    R = np.array([[np.cos(theta), -np.sin(theta), x],
-                  [np.sin(theta), np.cos(theta), y],
-                  [0, 0, 1]])
-    # Rotate
-    hullr = np.dot(R, HULL)
-    return hullr
+# Init entity numbers
+buoysNb = 2
+sailboatsNb = 4
 
 
-def update_disp(msg, sailboat_name):
-    global sailboats
+def update_disp(msg, name):
+    global sailboats, buoys
     # print 'Updating', sailboat_name
-    sailboats[sailboat_name].add_new_pose(msg.pose)
+    # print('[INFO] updating : {}'.format(name))
+    if name in sailboats:
+        # print('[INFO] Adding new sailboat pose : {}'.format(name))
+        sailboats[name].add_new_pose(msg.pose)
+    else:
+        # NOTE: verifier format msg
+        # print('[INFO] Adding new buoy pose : {}'.format(name))
+        # print 'received buoy pose: {}, {}, {}, {}'.format(name, msg.x, msg.y, msg.z)
+        buoys[name].add_new_pose(msg)
 
 
 def update_wind(msg):
@@ -87,11 +89,17 @@ def update_wind(msg):
     wind_dir, wind_strength = msg.wind_angle, msg.wind_strength
 
 
-def update_center(msg, sailboat_name):
-    global sailboats
+def update_center(msg, name):
+    global sailboats, buoys
     # print 'Updating center', sailboat_name
-    sailboats[sailboat_name].cx = msg.data[0]
-    sailboats[sailboat_name].cy = msg.data[1]
+    if name in sailboats:
+        sailboats[name].cx = msg.data[0]
+        sailboats[name].cy = msg.data[1]
+    else:
+        pass
+        # NOTE: verifier format msg
+        # buoys[name].cx = msg.data[0]
+        # buoys[name].cy = msg.data[1]
 
 
 def handle_close(event):
@@ -102,28 +110,26 @@ def handle_close(event):
 # Initialize node
 rospy.init_node('display_simple')
 
-
-# Sailboats pose
-sailboats = {'sailboat1': SailboatPoseHolder(SailboatPose().pose),
-             'sailboat2': SailboatPoseHolder(SailboatPose().pose),
-             'sailboat3': SailboatPoseHolder(SailboatPose().pose),
-             'sailboat4': SailboatPoseHolder(SailboatPose().pose)}
-
-# Subscriber to the sailboat position
-rospy.Subscriber('sailboat1/pose_real', SailboatPose,
-                 update_disp, callback_args='sailboat1')
-rospy.Subscriber('sailboat2/pose_real', SailboatPose,
-                 update_disp, callback_args='sailboat2')
-rospy.Subscriber('sailboat3/pose_real', SailboatPose,
-                 update_disp, callback_args='sailboat3')
-rospy.Subscriber('sailboat4/pose_real', SailboatPose,
-                 update_disp, callback_args='sailboat4')
+# BuoyPose
+# Suscriber to the buoy position
+# NOTE: verifier si Point est le bon message
+buoys = dict()
+for i in range(buoysNb):
+    buoys['buoy{}'.format(i)] = BuoyPoseHolder(Point())
+    rospy.Subscriber('buoy{}/pose_real'.format(i), Point,update_disp, callback_args='buoy{}'.format(i))
+    # print('[INFO] Suscribed to {}'.format('buoy{}/pose_real'.format(i)))
 
 rospy.Subscriber('world/env', WorldInfo, update_wind)
-rospy.Subscriber('sailboat1/triangleCenter', Float64MultiArray, update_center, callback_args='sailboat1')
-rospy.Subscriber('sailboat2/triangleCenter', Float64MultiArray, update_center, callback_args='sailboat2')
-rospy.Subscriber('sailboat3/triangleCenter', Float64MultiArray, update_center, callback_args='sailboat3')
-rospy.Subscriber('sailboat4/triangleCenter', Float64MultiArray, update_center, callback_args='sailboat4')
+
+# Sailboats pose
+# Subscriber to the sailboat position
+# Suscriber to the center of the triangles
+sailboats = dict()
+for i in range(1, sailboatsNb+1):
+    sailboats['sailboat{}'.format(i)] = SailboatPoseHolder(SailboatPose().pose)
+    rospy.Subscriber('sailboat{}/pose_real'.format(i), SailboatPose, update_disp, callback_args='sailboat{}'.format(i))
+    rospy.Subscriber('sailboat{}/triangleCenter'.format(i), Float64MultiArray, update_center, callback_args='sailboat{}'.format(i))
+    # print('[INFO] Suscribed to {}'.format('sailboat{}/pose_real'.format(i)))
 
 # Figure for display
 fig = plt.figure("Display")
@@ -154,12 +160,10 @@ while not rospy.is_shutdown() and not closed:
         y = sb.histY[0:maxID]
         plt.plot(x, y, 'g')
 
-        hull = draw_sailboat(sb.pose.x, sb.pose.y, sb.pose.theta)
-        triangleIn = draw_triangle(sb.cx, sb.cy, 50-10*1.5)
-        triangle = draw_triangle(sb.cx, sb.cy, 50)
-        triangleOut = draw_triangle(sb.cx, sb.cy, 50+10*1.5)
-        # if sb.cx == 0 and sb.cy == 0:
-        #     print "ZEEEERROOOOOO : " + k
+        hull = seaplt.draw_sailboat(sb.pose.x, sb.pose.y, sb.pose.theta)
+        triangleIn = seaplt.draw_triangle(sb.cx, sb.cy, 50-10*1.5)
+        triangle = seaplt.draw_triangle(sb.cx, sb.cy, 50)
+        triangleOut = seaplt.draw_triangle(sb.cx, sb.cy, 50+10*1.5)
 
         plt.plot(triangle[0], triangle[1], 'b', linewidth=1)
         plt.plot(triangleIn[0], triangleIn[1], 'r-', linewidth=1)
@@ -171,6 +175,24 @@ while not rospy.is_shutdown() and not closed:
         maxY = max(maxY, sb.pose.y)
         minX = min(minX, sb.pose.x)
         minY = min(minY, sb.pose.y)
+
+    for bKey in buoys:
+        print('[INFO] buoy name : {}'.format(bKey))
+        # print('[INFO] buoy obj : {}'.format(buoys[bKey]))
+        # print('[INFO] buoy pose.pose : {}'.format(buoys[bKey].pose))
+        # print('[INFO] buoy x coord : {}'.format(buoys[bKey].pose.x))
+        # print('[INFO] buoy y coord : {}'.format(buoys[bKey].pose.y))
+        # print('[INFO] buoy y coord : {}'.format(buoys[bKey].pose.z))
+
+        x = buoys[bKey].pose.x
+        y = buoys[bKey].pose.y
+        z = buoys[bKey].pose.z
+        zmax = 1000
+
+        print 'plotting buoy at: {}, {}, {}'.format(x, y, z)
+        plt.plot(x, y, 'ko')
+        buoy_shape = seaplt.draw_buoy_xy(x, y, z, zmax)
+        plt.gcf().gca().add_artist(buoy_shape)
 
     plt.quiver(minX+10, minY+10, wind_strength*np.cos(wind_dir), wind_strength*np.sin(wind_dir))
 
